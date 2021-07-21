@@ -4,28 +4,24 @@ module.exports = app => {
     const { existsOrError } = app.api.validation
 
     const save = (req, res) => {
-        const article = { ...req.body }
-        if(req.params.id) article.id = req.params.id
+        const key = { ...req.body }
+        if(req.params.id) key.id = req.params.id
 
         try {
-            existsOrError(article.name, 'Nome não informado')
-            existsOrError(article.description, 'Descrição não informada')
-            existsOrError(article.categoryId, 'Categoria não informada')
-            existsOrError(article.userId, 'Autor não informado')
-            existsOrError(article.content, 'Conteúdo não informado')
+            existsOrError(key.key, 'Chave não informada')
         } catch(msg) {
             res.status(400).send(msg)
         }
 
-        if(article.id) {
-            app.db('articles')
-                .update(article)
-                .where({ id: article.id })
+        if(key.id) {
+            app.db('keys')
+                .update(key)
+                .where({ id: key.id })
                 .then(_ => res.status(204).send())
                 .catch(err => res.status(500).send(err))
         } else {
-            app.db('articles')
-                .insert(article)
+            app.db('keys')
+                .insert(key)
                 .then(_ => res.status(204).send())
                 .catch(err => res.status(500).send(err))
         }
@@ -33,7 +29,7 @@ module.exports = app => {
 
     const remove = async (req, res) => {
         try {
-            const rowsDeleted = await app.db('articles')
+            const rowsDeleted = await app.db('keys')
                 .where({ id: req.params.id }).del()
             
             try {
@@ -52,23 +48,23 @@ module.exports = app => {
     const get = async (req, res) => {
         const page = req.query.page || 1
 
-        const result = await app.db('articles').count('id').first()
+        const result = await app.db('keys').count('id').first()
         const count = parseInt(result.count)
 
-        app.db('articles')
-            .select('id', 'name', 'description')
+        app.db('keys')
+            .select('id', 'key')
             .limit(limit).offset(page * limit - limit)
-            .then(articles => res.json({ data: articles, count, limit }))
+            .then(keys => res.json({ data: keys, count, limit }))
             .catch(err => res.status(500).send(err))
     }
 
     const getById = (req, res) => {
-        app.db('articles')
+        app.db('keys')
             .where({ id: req.params.id })
             .first()
-            .then(article => {
-                article.content = article.content.toString()
-                return res.json(article)
+            .then(key => {
+                key.content = key.content.toString()
+                return res.json(key)
             })
             .catch(err => res.status(500).send(err))
     }
@@ -79,13 +75,13 @@ module.exports = app => {
         const categories = await app.db.raw(queries.categoryWithChildren, categoryId)
         const ids = categories.rows.map(c => c.id)
 
-        app.db({a: 'articles', u: 'users'})
+        app.db({a: 'keys', u: 'users'})
             .select('a.id', 'a.name', 'a.description', 'a.imageUrl', { author: 'u.name' })
             .limit(limit).offset(page * limit - limit)
             .whereRaw('?? = ??', ['u.id', 'a.userId'])
             .whereIn('categoryId', ids)
             .orderBy('a.id', 'desc')
-            .then(articles => res.json(articles))
+            .then(keys => res.json(keys))
             .catch(err => res.status(500).send(err))
     }
 
