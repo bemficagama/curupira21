@@ -1,0 +1,27 @@
+<h2 class="text-center">Criar Minha Conta</h2>
+
+<form (ngSubmit)="onSubmit()" #form="ngForm">
+    <div class="mb-3">
+        <label>Nome</label>
+        <input class="form-control" type="text" name="nome" id="nome" [(ngModel)]="account.name" required />
+    </div>
+
+    <div class="mb-3">
+        <label>E-mail</label>
+        <input class="form-control" type="email" name="email" id="email" [(ngModel)]="account.email" required />
+        <div id="emailHelp" class="form-text">Nunca compartilharemos seu e-mail com mais ninguém.</div>
+    </div>
+
+    <div class="mb-3">
+        <label>Senha</label>
+        <input class="form-control" type="password" name="senha" id="senha" [(ngModel)]="account.password" required />
+    </div>
+
+    <div class="mb-3">
+        <label>Confirmar Senha</label>
+        <input class="form-control" type="password" name="confirmar" id="confirmar" [(ngModel)]="account.confirmPassword" required />
+    </div>
+
+    <div class="d-grid gap-2">
+        <button type="submit" class="btn btn-primary btn-block" [disabled]="form.form.invalid">Criar minha conta</button>
+    </div>

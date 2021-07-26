@@ -17,6 +17,10 @@ import { HttpClientModule } from '@angular/common/http';
 //import { RestDataSource } from "./model/rest.datasource";
 import { HttpErrorHandler } from "./http-error-handler.service";
 import { MessageService } from "./message.service";
+import { LoginComponent } from './account/login/login.component';
+import { CreateAccountComponent } from './account/create-account/create-account.component';
+import { HomeComponent } from './layout/home/home.component';
+import { AuthenticationComponent } from './layout/authentication/authentication.component';
 
 @NgModule({
   declarations: [
@@ -24,7 +28,7 @@ import { MessageService } from "./message.service";
     FooterComponent,
     HeaderComponent,
     CategoryReadComponent, 
-    KeyComponent, UrlComponent
+    KeyComponent, UrlComponent, LoginComponent, CreateAccountComponent, HomeComponent, AuthenticationComponent
   ],
   imports: [
     BrowserModule,

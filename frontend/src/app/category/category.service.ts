@@ -22,7 +22,7 @@ const PORT = 4000;
 @Injectable()
 export class CategoryService {
     baseUrl: string;
-    heroesUrl = 'api/heroes';  // URL to web api
+    //heroesUrl = 'api/heroes';  // URL to web api
     private handleError: HandleError;
 
     constructor(
