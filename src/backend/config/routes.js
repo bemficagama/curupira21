@@ -17,10 +17,10 @@ module.exports = app => {
         .delete(admin(app.api.user.remove))
 
     app.route('/categories')
-    	.get(app.api.category.get)
-        //.all(app.config.passport.authenticate())
-        //.get(admin(app.api.category.get))
-        //.post(admin(app.api.category.save))
+        //.get(app.api.category.get)
+        .all(app.config.passport.authenticate())
+        .get(admin(app.api.category.get))
+        .post(admin(app.api.category.save))
 
     // Cuidado com ordem! Tem que vir antes de /categories/:id
     app.route('/categories/tree')
