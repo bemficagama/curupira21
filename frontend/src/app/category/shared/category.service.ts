@@ -7,7 +7,8 @@ import { Observable } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 
 import { Category } from './category';
-import { HttpErrorHandler, HandleError } from '../http-error-handler.service';
+import { HttpErrorHandler, HandleError } from '../../http-error-handler.service';
+import { CategoryRequest } from './categoryRequest';
 
 const httpOptions = {
     headers: new HttpHeaders({
@@ -35,8 +36,7 @@ export class CategoryService {
     /** GET heroes from the server */
     getCategories(): Observable<Category[]> {
         return this.http.get<Category[]>(this.baseUrl + "categories")
-            .pipe(
-                catchError(this.handleError('getCategories', []))
+            .pipe(catchError(this.handleError('getCategories', []))
             );
     }
 

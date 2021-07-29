@@ -16,10 +16,10 @@ export class AuthInterceptor implements HttpInterceptor {
     const token = this.accountService.getAuthorizationToken();
     let request: HttpRequest<any> = req;
 
-    if (token) {
-      // O request Ã© imutavel, ou seja, nÃ£o Ã© possÃ­vel mudar nada
-      // FaÃ§o o clone para conseguir mudar as propriedades
-      // Passo o token de autenticaÃ§Ã£o no header
+    if (token && !this.accountService.isTokenExpired(token)) {
+      // O request é imutavel, ou seja, não é possível mudar nada
+      // Faço o clone para conseguir mudar as propriedades
+      // Passo o token de autenticação no header
       request = req.clone({
         headers: req.headers.set('Authorization', `Bearer ${token}`)
       });
@@ -39,7 +39,7 @@ export class AuthInterceptor implements HttpInterceptor {
     } else {
       // Erro retornando pelo backend
       console.error(
-        `CÃ³digo do erro ${error.status}, ` +
+        `Código do erro ${error.status}, ` +
         `Erro: ${JSON.stringify(error.error)}`);
     }
     // retornar um observable com uma mensagem amigavel.

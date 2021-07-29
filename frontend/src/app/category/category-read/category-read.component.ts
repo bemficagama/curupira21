@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 
-import { Category } from '../category';
-import { CategoryService } from '../category.service';
+import { Category } from '../shared/category';
+import { CategoryService } from '../shared/category.service';
 
 @Component({
   selector: 'app-category-read',
