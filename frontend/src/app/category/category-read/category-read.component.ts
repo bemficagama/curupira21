@@ -13,19 +13,22 @@ export class CategoryReadComponent implements OnInit {
   categories: Category[] = [];
   editCategory: Category | undefined; // the Entity currently being edited
 
-  constructor(private categoryService: CategoryService) {}
+  public quantityPerPage = 4;
+  public selectedPage = 1;
+
+  constructor(private categoryService: CategoryService) { }
 
   ngOnInit() {
     this.getCategory();
   }
 
   getCategory(): void {
-    this.categoryService.getCategories()
+    this.categoryService.getCategories(this.selectedPage, this.quantityPerPage)
       .subscribe(data => (this.categories = data));
   }
 
   navigateToProductCreate(): void {
-    
+
   }
 
   edit(category: Category) {
@@ -94,11 +97,23 @@ export class CategoryReadComponent implements OnInit {
       this.editHero = undefined;
     }
   } */
+
+  changePage(newPage: number) {
+    this.selectedPage = newPage
+    this.getCategory()
+  }
+
+  changePageSize(newSize: number) {
+    this.quantityPerPage = Number(newSize);
+    this.changePage(1);
+  }
+
+  get pageCount(): number {
+    return 1
+  }
+
+  onChangeSize($event: any) {
+    const size: number = $event.value
+    this.changePageSize(size)
+  }
 }
-
-
-/*
-Copyright Google LLC. All Rights Reserved.
-Use of this source code is governed by an MIT-style license that
-can be found in the LICENSE file at https://angular.io/license
-*/

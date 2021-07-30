@@ -1,4 +1,4 @@
-<div class="container">
+<div class="container app-category-read">
 
   <button class="btn btn-success" (click)="navigateToProductCreate()">
     Nova Categoria
@@ -13,7 +13,7 @@
           <th>Nome</th>
           <th class="text-right">Descrição</th>
           <th>Caminho</th>
-          <th>Ação</th>
+          <th class="col-md-1">Ação</th>
         </tr>
       </thead>
       <tbody>
@@ -27,17 +27,36 @@
           <td>{{category.description}}</td>
           <td>{{category.path}}</td>
           <td class="text-center">
-            <a (click)="delete(category)"><i class="fas fa-trash"></i></a>
-            &nbsp;
-            <a [routerLink]="['/category/edit']"><i class="fas fa-edit"></i></a>
+            <a [routerLink]="['/category/edit']"><i class="fas fa-edit edit"></i></a>
+            <a (click)="delete(category)"><i class="fas fa-trash delete"></i></a>
           </td>
         </tr>
       </tbody>
       <tfoot>
-        <tr>
-          <td colspan="3" class="text-right">Total:</td>
-        </tr>
+
       </tfoot>
     </table>
+
+    <nav aria-label="Page navigation example">
+      <div class="row">
+        <div class="col-md-2">
+          <select class="form-control" [value]="quantityPerPage" (change)="onChangeSize($event.target)">
+            <option value="3">3 por Página</option>
+            <option value="4">4 por Página</option>
+            <option value="6">6 por Página</option>
+            <option value="8">8 por Página</option>
+          </select>
+        </div>
+        <div class="col-md-2">
+          <ul class="pagination ">
+            <li class="page-item"><a class="page-link" href="#">Anterior</a></li>
+            <li class="page-item"><a class="page-link" (click)="changePage(1)">1</a></li>
+            <li class="page-item"><a class="page-link" (click)="changePage(2)">2</a></li>
+            <li class="page-item"><a class="page-link" (click)="changePage(3)">3</a></li>
+            <li class="page-item"><a class="page-link" href="#">Próxima</a></li>
+          </ul>
+        </div>
+      </div>
+    </nav>
   </div>
 </div>

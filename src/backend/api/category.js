@@ -7,16 +7,16 @@ module.exports = app => {
             name: req.body.name,
             parentId: req.body.parentId
         }
-        
-        if(req.params.id) category.id = req.params.id
+
+        if (req.params.id) category.id = req.params.id
 
         try {
             existsOrError(category.name, 'Nome não informado')
-        } catch(msg) {
+        } catch (msg) {
             return res.status(400).send(msg)
         }
 
-        if(category.id) {
+        if (category.id) {
             app.db('categories')
                 .update(category)
                 .where({ id: category.id })
@@ -47,7 +47,7 @@ module.exports = app => {
             existsOrError(rowsDeleted, 'Categoria não foi encontrada.')
 
             res.status(204).send()
-        } catch(msg) {
+        } catch (msg) {
             res.status(400).send(msg)
         }
     }
@@ -62,7 +62,7 @@ module.exports = app => {
             let path = category.name
             let parent = getParent(categories, category.parentId)
 
-            while(parent) {
+            while (parent) {
                 path = `${parent.name} > ${path}`
                 parent = getParent(categories, parent.parentId)
             }
@@ -71,17 +71,24 @@ module.exports = app => {
         })
 
         categoriesWithPath.sort((a, b) => {
-            if(a.path < b.path) return -1
-            if(a.path > b.path) return 1
+            if (a.path < b.path) return -1
+            if (a.path > b.path) return 1
             return 0
         })
 
         return categoriesWithPath
     }
 
-    const get = (req, res) => {
+    const getAll = (req, res) => {
+        const page = req.query.page || 1
+        const pageSize = req.query.size || 5
+
+        const result = app.db('keys').count('id').first()
+        const count = parseInt(result.count)
+
         app.db('categories')
-            .then(categories => res.json(withPath(categories)))
+            .limit(pageSize).offset(page * pageSize - pageSize)
+            .then(categories => res.json(withPath({data: categories, count})))
             .catch(err => res.status(500).send(err))
     }
 
@@ -94,7 +101,7 @@ module.exports = app => {
     }
 
     const toTree = (categories, tree) => {
-        if(!tree) tree = categories.filter(c => !c.parentId)
+        if (!tree) tree = categories.filter(c => !c.parentId)
         tree = tree.map(parentNode => {
             const isChild = node => node.parentId == parentNode.id
             parentNode.children = toTree(categories, categories.filter(isChild))
@@ -109,5 +116,5 @@ module.exports = app => {
             .catch(err => res.status(500).send(err))
     }
 
-    return { save, remove, get, getById, getTree }
+    return { save, remove, getAll, getById, getTree }
 }

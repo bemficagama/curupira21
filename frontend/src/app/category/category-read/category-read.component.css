@@ -2,14 +2,20 @@ table {
     width: 100%;
 }
 
-.edit {
-    margin-right: 10px;
+li.page-item {
+    cursor: pointer;
 }
 
-.edit > i {
+.edit {
+    margin-right: 10px;
+    cursor: pointer;
     color: #d9cd26;
 }
 
-.delete > i {
+.delete {
     color: #e35e6b;
+}
+
+.app-category-read {
+    padding-bottom: 60px;
 }

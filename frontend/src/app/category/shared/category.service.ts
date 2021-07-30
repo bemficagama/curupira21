@@ -34,11 +34,11 @@ export class CategoryService {
     }
 
     /** GET heroes from the server */
-    getCategories(): Observable<Category[]> {
-        return this.http.get<Category[]>(this.baseUrl + "categories")
-            .pipe(catchError(this.handleError('getCategories', []))
+    getCategories(page: number = 1, size: number = 4): Observable<CategoryRequest> {
+        return this.http.get<CategoryRequest>(this.baseUrl + "categories?page="+page+"&size="+size)
+            /* .pipe(catchError(this.handleError('getCategories', []))
             );
-    }
+    } */
 
     /* GET heroes whose name contains search term */
     /* searchHeroes(term: string): Observable<Hero[]> {
