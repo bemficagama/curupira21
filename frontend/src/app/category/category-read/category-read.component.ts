@@ -12,9 +12,14 @@ import { CategoryService } from '../shared/category.service';
 export class CategoryReadComponent implements OnInit {
   categories: Category[] = [];
   editCategory: Category | undefined; // the Entity currently being edited
+  quantityPages: number = 0;
+  groupIndex: number = 0;
+  groups: number[][] = []
 
   public quantityPerPage = 4;
   public selectedPage = 1;
+  public firstPage = 1;
+  public lastPage = 1;
 
   constructor(private categoryService: CategoryService) { }
 
@@ -23,8 +28,14 @@ export class CategoryReadComponent implements OnInit {
   }
 
   getCategory(): void {
+    let count: number = 0;
     this.categoryService.getCategories(this.selectedPage, this.quantityPerPage)
-      .subscribe(data => (this.categories = data));
+      .subscribe(data => {
+        this.categories = data.data
+        count = data.count
+        this.quantityPages = Math.ceil(count / this.quantityPerPage)
+        this.groups = this.separar(this.pages, 5)
+      })
   }
 
   navigateToProductCreate(): void {
@@ -44,7 +55,7 @@ export class CategoryReadComponent implements OnInit {
     //
     // oops ... subscribe() is missing so nothing happens
     //this.heroesService.deleteHero(hero.id);
-    //
+    //37010014000104
   }
 
   /* add(name: string): void {
@@ -98,6 +109,42 @@ export class CategoryReadComponent implements OnInit {
     }
   } */
 
+  private separar(itens: any[], maximo: number) : number[][]{
+    return itens.reduce((acumulador: any[], item: number, indice: number) => {
+      const grupo = Math.floor(indice / maximo);
+      acumulador[grupo] = [...(acumulador[grupo] || []), item];
+      return acumulador;
+    }, []);
+  };
+
+  get pages() {
+    let aPages = new Array()
+    for (let i = 0; i < this.quantityPages; i++) {
+      aPages[i] = i + 1
+    }
+    return aPages
+  }
+
+  get group(): number[]{
+    //this.groups = this.separar(this.pages, 5)
+    return this.groups[this.groupIndex]
+  }
+
+  groupPrior() {
+    if (this.groupIndex > 0) {
+      this.groupIndex--
+      this.changePage(this.groups[this.groupIndex][0])
+    }
+  }
+
+  groupNext() {
+    if (this.groupIndex < this.groups.length - 1) {
+      this.groupIndex++
+      this.changePage(this.groups[this.groupIndex][0])
+    }
+    
+  }
+
   changePage(newPage: number) {
     this.selectedPage = newPage
     this.getCategory()
@@ -105,6 +152,7 @@ export class CategoryReadComponent implements OnInit {
 
   changePageSize(newSize: number) {
     this.quantityPerPage = Number(newSize);
+    this.groupIndex = 0
     this.changePage(1);
   }
 

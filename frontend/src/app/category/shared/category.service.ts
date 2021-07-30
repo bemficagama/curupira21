@@ -7,8 +7,8 @@ import { Observable } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 
 import { Category } from './category';
-import { HttpErrorHandler, HandleError } from '../../http-error-handler.service';
 import { CategoryRequest } from './categoryRequest';
+import { HttpErrorHandler, HandleError } from '../../http-error-handler.service';
 
 const httpOptions = {
     headers: new HttpHeaders({
@@ -36,9 +36,9 @@ export class CategoryService {
     /** GET heroes from the server */
     getCategories(page: number = 1, size: number = 4): Observable<CategoryRequest> {
         return this.http.get<CategoryRequest>(this.baseUrl + "categories?page="+page+"&size="+size)
-            /* .pipe(catchError(this.handleError('getCategories', []))
-            );
-    } */
+            //.pipe(catchError(this.handleError('getCategories', []))
+            //);
+    } 
 
     /* GET heroes whose name contains search term */
     /* searchHeroes(term: string): Observable<Hero[]> {
@@ -84,10 +84,3 @@ export class CategoryService {
             );
     } */
 }
-
-
-/*
-Copyright Google LLC. All Rights Reserved.
-Use of this source code is governed by an MIT-style license that
-can be found in the LICENSE file at https://angular.io/license
-*/

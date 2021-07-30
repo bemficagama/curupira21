@@ -30,7 +30,7 @@ module.exports = app => {
         }
     }
 
-    const remove = async (req, res) => {
+    const remove = async(req, res) => {
         try {
             existsOrError(req.params.id, 'Código da Categoria não informado.')
 
@@ -67,7 +67,7 @@ module.exports = app => {
                 parent = getParent(categories, parent.parentId)
             }
 
-            return { ...category, path }
+            return {...category, path }
         })
 
         categoriesWithPath.sort((a, b) => {
@@ -79,16 +79,16 @@ module.exports = app => {
         return categoriesWithPath
     }
 
-    const getAll = (req, res) => {
+    const getAll = async(req, res) => {
         const page = req.query.page || 1
         const pageSize = req.query.size || 5
 
-        const result = app.db('keys').count('id').first()
+        const result = await app.db('categories').count('id', { as: 'count' }).first()
         const count = parseInt(result.count)
 
         app.db('categories')
             .limit(pageSize).offset(page * pageSize - pageSize)
-            .then(categories => res.json(withPath({data: categories, count})))
+            .then(categories => res.json({ data: withPath(categories), count }))
             .catch(err => res.status(500).send(err))
     }
 
