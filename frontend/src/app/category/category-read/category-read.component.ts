@@ -31,8 +31,8 @@ export class CategoryReadComponent implements OnInit {
     let count: number = 0;
     this.categoryService.getCategories(this.selectedPage, this.quantityPerPage)
       .subscribe(data => {
-        this.categories = data.data
-        count = data.count
+        this.categories = data!.data
+        count = data!.count
         this.quantityPages = Math.ceil(count / this.quantityPerPage)
         this.groups = this.separar(this.pages, 5)
       })
@@ -49,13 +49,8 @@ export class CategoryReadComponent implements OnInit {
 
   delete(category: Category): void {
     this.categories = this.categories.filter(c => c !== category);
-    this.categoryService
-      .deleteCategory(category.id!)
-      .subscribe();
-    //
-    // oops ... subscribe() is missing so nothing happens
-    //this.heroesService.deleteHero(hero.id);
-    //37010014000104
+    this.categoryService.deleteCategory(category.id!)
+      .subscribe(data => {});
   }
 
   /* add(name: string): void {
@@ -109,7 +104,7 @@ export class CategoryReadComponent implements OnInit {
     }
   } */
 
-  private separar(itens: any[], maximo: number) : number[][]{
+  private separar(itens: any[], maximo: number): number[][] {
     return itens.reduce((acumulador: any[], item: number, indice: number) => {
       const grupo = Math.floor(indice / maximo);
       acumulador[grupo] = [...(acumulador[grupo] || []), item];
@@ -125,7 +120,7 @@ export class CategoryReadComponent implements OnInit {
     return aPages
   }
 
-  get group(): number[]{
+  get group(): number[] {
     //this.groups = this.separar(this.pages, 5)
     return this.groups[this.groupIndex]
   }
@@ -142,7 +137,7 @@ export class CategoryReadComponent implements OnInit {
       this.groupIndex++
       this.changePage(this.groups[this.groupIndex][0])
     }
-    
+
   }
 
   changePage(newPage: number) {

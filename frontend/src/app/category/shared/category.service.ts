@@ -1,9 +1,10 @@
+import { environment } from './../../../environments/environment';
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { HttpHeaders } from '@angular/common/http';
 
 
-import { Observable } from 'rxjs';
+import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 
 import { Category } from './category';
@@ -33,12 +34,27 @@ export class CategoryService {
         this.baseUrl = `${PROTOCOL}://${location.hostname}:${PORT}/`;
     }
 
-    /** GET heroes from the server */
-    getCategories(page: number = 1, size: number = 4): Observable<CategoryRequest> {
-        return this.http.get<CategoryRequest>(this.baseUrl + "categories?page="+page+"&size="+size)
-            //.pipe(catchError(this.handleError('getCategories', []))
-            //);
-    } 
+    getCategories(page: number = 1, size: number = 4): Observable<CategoryRequest | null> {
+        return this.http.get<CategoryRequest>(this.baseUrl + "categories?page=" + page + "&size=" + size)
+            .pipe(catchError(this.handleError('getCategories', null)))
+    }
+
+    readById(id: number) {
+        return this.http.get<Category>(`${environment.api}/categories/${id}`)
+            .pipe(catchError(this.handleError('category.getById', null)))
+
+    }
+
+    update(category: Category): Observable<Category> {
+        return this.http.put<Category>(`${environment.api}/categories/${category.id}`, category)
+            .pipe(catchError(this.handleError('category.getById', category)))
+    }
+
+    deleteCategory(id: number): Observable<unknown> {
+        const url = `${this.baseUrl + "categories"}/${id}`;
+        return this.http.delete(`${environment.api}/categories/${id}`)
+            .pipe(catchError(this.handleError('deleteCategory', id)))
+    }
 
     /* GET heroes whose name contains search term */
     /* searchHeroes(term: string): Observable<Hero[]> {
@@ -65,13 +81,7 @@ export class CategoryService {
     } */
 
     /** DELETE: delete the hero from the server */
-    deleteCategory(id: number): Observable<unknown> {
-        const url = `${this.baseUrl + "categories"}/${id}`; // DELETE api/heroes/42
-        return this.http.delete(url, httpOptions)
-            .pipe(
-                catchError(this.handleError('deleteCategory'))
-            );
-    }
+
 
     /** PUT: update the hero on the server. Returns the updated hero upon success. */
     /* updateHero(hero: Hero): Observable<Hero> {

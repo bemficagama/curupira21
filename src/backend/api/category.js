@@ -38,9 +38,13 @@ module.exports = app => {
                 .where({ parentId: req.params.id })
             notExistsOrError(subcategory, 'Categoria possui subcategorias.')
 
-            const articles = await app.db('articles')
-                .where({ categoryId: req.params.id })
-            notExistsOrError(articles, 'Categoria possui artigos.')
+            const category_urls = await app.db('url_has_categories')
+                .where({ category_id: req.params.id })
+            notExistsOrError(category_urls, 'Categoria possui URLs.')
+
+            const category_keys = await app.db('key_has_categories')
+                .where({ category_id: req.params.id })
+            notExistsOrError(category_keys, 'Categoria possui Chaves.')
 
             const rowsDeleted = await app.db('categories')
                 .where({ id: req.params.id }).del()

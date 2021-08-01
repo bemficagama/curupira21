@@ -1,8 +1,9 @@
 <div class="container app-category-read">
+    <div id="snackbar">Some text some message..</div>
 
     <button class="btn btn-success" (click)="navigateToProductCreate()">
-    Nova Categoria
-  </button>
+        Nova Categoria
+    </button>
 
 
 
@@ -10,24 +11,26 @@
         <table class="table table-bordered table-striped p-2">
             <thead>
                 <tr>
-                    <th>Nome</th>
-                    <th class="text-right">Descrição</th>
-                    <th>Caminho</th>
-                    <th class="col-md-1">Ação</th>
+                    <th class="col">#</th>
+                    <th class="col col-md-2">Nome</th>
+                    <th class="col col-md-7">Descrição</th>
+                    <th class="col col-md-2">Caminho</th>
+                    <th class="col col-md-1">Ação</th>
                 </tr>
             </thead>
             <tbody>
-                <tr *ngIf="categories.length == 0">
+                <tr *ngIf="categories.length == 0" class="row">
                     <td colspan="4" class="text-center">
                         Lista de Categoria Vazia!
                     </td>
                 </tr>
-                <tr *ngFor="let category of categories">
+                <tr *ngFor="let category of categories; index as i">
+                    <th scope="row">{{i+1}}</th>
                     <td>{{category.name}}</td>
                     <td>{{category.description}}</td>
                     <td>{{category.path}}</td>
                     <td class="text-center">
-                        <a [routerLink]="['/category/edit']"><i class="fas fa-edit edit"></i></a>
+                        <a routerLink="/category/category-update/{{category.id}}"><i class="fas fa-edit edit"></i></a>
                         <a (click)="delete(category)"><i class="fas fa-trash delete"></i></a>
                     </td>
                 </tr>
@@ -41,16 +44,17 @@
             <div class="row">
                 <div class="col-md-2">
                     <select class="form-control" [value]="quantityPerPage" (change)="onChangeSize($event.target)">
-            <option value="3">3 por Página</option>
-            <option value="4">4 por Página</option>
-            <option value="6">6 por Página</option>
-            <option value="8">8 por Página</option>
-          </select>
+                        <option value="3">3 por Página</option>
+                        <option value="4">4 por Página</option>
+                        <option value="6">6 por Página</option>
+                        <option value="8">8 por Página</option>
+                    </select>
                 </div>
                 <div class="col-md-2">
                     <ul class="pagination">
                         <li class="page-item"><a class="page-link" (click)="groupPrior()">Anterior</a></li>
-                        <li *ngFor="let page of group" class="page-item" [class.active]="page == selectedPage"><a class="page-link" (click)="changePage(page)">{{page}}</a></li>
+                        <li *ngFor="let page of group" class="page-item" [class.active]="page == selectedPage"><a
+                                class="page-link" (click)="changePage(page)">{{page}}</a></li>
                         <li class="page-item"><a class="page-link" (click)="groupNext()">Próxima</a></li>
                     </ul>
                 </div>

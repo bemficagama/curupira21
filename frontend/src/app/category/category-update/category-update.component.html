@@ -1,0 +1,26 @@
+<div class="container app-category-update">
+    <div class="bg-primary p-2 text-white bg-warning text-dark">
+        <h5>Alterar Categoria</h5>
+    </div>
+    <form (ngSubmit)="updateCategory()" #categoryForm="ngForm">
+        <div class="form-group">
+            <label>Nome</label>
+            <input class="form-control" name="name" id="name" [(ngModel)]="category.name"  #name="ngModel"/>
+        </div>
+        <div class="form-group">
+            <label>Descrição</label>
+            <textarea class="form-control" name="description" [(ngModel)]="category.description">
+        </textarea>
+        </div>
+        <div class="form-group">
+            <label>Categoria Pai</label>
+            <input class="form-control" name="category" [(ngModel)]="category.parentid" />
+        </div>
+        <button type="submit" class="btn btn-primary m-1 btn-warning">
+            Salvar
+        </button>
+        <button type="reset" class="btn btn-secondary" routerLink="/category">
+            Cancelar
+        </button>
+    </form>
+</div>
