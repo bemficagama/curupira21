@@ -1,15 +1,11 @@
 import { environment } from './../../../environments/environment';
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse, HttpParams } from '@angular/common/http';
 import { HttpHeaders } from '@angular/common/http';
-
-
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
-
 import { Category } from './category';
 import { CategoryRequest } from './categoryRequest';
-import { HttpErrorHandler, HandleError } from '../../http-error-handler.service';
 
 const httpOptions = {
     headers: new HttpHeaders({
@@ -25,35 +21,50 @@ const PORT = 4000;
 export class CategoryService {
     baseUrl: string;
     //heroesUrl = 'api/heroes';  // URL to web api
-    private handleError: HandleError;
 
     constructor(
-        private http: HttpClient,
-        httpErrorHandler: HttpErrorHandler) {
-        this.handleError = httpErrorHandler.createHandleError('CategoryService');
+        private http: HttpClient) {
         this.baseUrl = `${PROTOCOL}://${location.hostname}:${PORT}/`;
     }
 
     getCategories(page: number = 1, size: number = 4): Observable<CategoryRequest | null> {
         return this.http.get<CategoryRequest>(this.baseUrl + "categories?page=" + page + "&size=" + size)
-            .pipe(catchError(this.handleError('getCategories', null)))
+        //.pipe(catchError(this.handleError('getCategories', null)))
     }
 
     readById(id: number) {
         return this.http.get<Category>(`${environment.api}/categories/${id}`)
-            .pipe(catchError(this.handleError('category.getById', null)))
+        //.pipe(catchError(this.handleError('category.getById', null)))
 
     }
 
     update(category: Category): Observable<Category> {
         return this.http.put<Category>(`${environment.api}/categories/${category.id}`, category)
-            .pipe(catchError(this.handleError('category.getById', category)))
+        //.pipe(catchError(this.handleError('category.getById', category)))
     }
 
     deleteCategory(id: number): Observable<unknown> {
         const url = `${this.baseUrl + "categories"}/${id}`;
         return this.http.delete(`${environment.api}/categories/${id}`)
-            .pipe(catchError(this.handleError('deleteCategory', id)))
+            .pipe(catchError((error: HttpErrorResponse) => {
+
+                if (error.error instanceof ErrorEvent) {
+                    // Erro de client-side ou de rede
+                    console.error('Ocorreu um erro:', error.error.message);
+                } else {
+                    // Erro retornando pelo backend
+                    console.error(
+                        `Código do erro ${error.status}, ` +
+                        `Erro: ${JSON.stringify(error.error)}`);
+                }
+                // retornar um observable com uma mensagem amigavel.
+                console.log(error)
+                return throwError(`DELETE: ${JSON.stringify(error.error)}`);
+                `Network Error: ${error.statusText} (${error.status})`
+                throwError(`DELETE: ${error.statusText} ${JSON.stringify(error.error)} (Código do Erro: ${error.status})`)
+            }));
+
+        //.pipe(catchError(this.handleError('deleteCategory', id)))
     }
 
     /* GET heroes whose name contains search term */

@@ -10,7 +10,9 @@ import { CategoryService } from '../shared/category.service';
   styleUrls: ['./category-read.component.css']
 })
 export class CategoryReadComponent implements OnInit {
-  categories: Category[] = [];
+  private locator = (c: Category, id: number) => c.id == id;
+
+  categories: Category[] = new Array<Category>();
   editCategory: Category | undefined; // the Entity currently being edited
   quantityPages: number = 0;
   groupIndex: number = 0;
@@ -47,10 +49,19 @@ export class CategoryReadComponent implements OnInit {
     //vai para CategoryEditComponent
   }
 
-  delete(category: Category): void {
+  /* delete(category: Category): void {
     this.categories = this.categories.filter(c => c !== category);
     this.categoryService.deleteCategory(category.id!)
-      .subscribe(data => {});
+      .subscribe(data => { });
+  } */
+
+  delete(category: Category) {
+    this.categoryService.deleteCategory(category.id!).subscribe(() => {
+      let index = this.categories.findIndex(c => this.locator(c, category.id!));
+      if (index > -1) {
+        this.categories.splice(index, 1);
+      }
+    });
   }
 
   /* add(name: string): void {

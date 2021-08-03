@@ -15,13 +15,13 @@ import { KeyComponent } from './key/key.component';
 import { UrlComponent } from './url/url.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
-import { HttpErrorHandler } from "./http-error-handler.service";
 import { MessageService } from "./message.service";
 import { LoginComponent } from './account/login/login.component';
 import { CreateAccountComponent } from './account/create-account/create-account.component';
 import { HomeComponent } from './layout/home/home.component';
 import { AuthenticationComponent } from './layout/authentication/authentication.component';
 import { httpInterceptorProviders } from "./http-interceptors";
+import { MessageModule } from './messages/message.module';
 
 @NgModule({
   declarations: [
@@ -36,9 +36,9 @@ import { httpInterceptorProviders } from "./http-interceptors";
     FormsModule,
     ReactiveFormsModule,
     HttpClientModule,
-    AppRoutingModule
+    AppRoutingModule, MessageModule
   ],
-  providers: [MessageService, HttpErrorHandler, httpInterceptorProviders, CategoryService],
+  providers: [MessageService, httpInterceptorProviders, CategoryService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
