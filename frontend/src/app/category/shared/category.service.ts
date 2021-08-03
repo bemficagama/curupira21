@@ -6,6 +6,7 @@ import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { Category } from './category';
 import { CategoryRequest } from './categoryRequest';
+import { AlertService } from 'src/app/_alert';
 
 const httpOptions = {
     headers: new HttpHeaders({
@@ -19,13 +20,21 @@ const PORT = 4000;
 
 @Injectable()
 export class CategoryService {
+    options = {
+        autoClose: true,
+        keepAfterRouteChange: false
+    };
+
     baseUrl: string;
     //heroesUrl = 'api/heroes';  // URL to web api
 
     constructor(
-        private http: HttpClient) {
+        private http: HttpClient,
+        protected alertService: AlertService
+    ) {
         this.baseUrl = `${PROTOCOL}://${location.hostname}:${PORT}/`;
     }
+
 
     getCategories(page: number = 1, size: number = 4): Observable<CategoryRequest | null> {
         return this.http.get<CategoryRequest>(this.baseUrl + "categories?page=" + page + "&size=" + size)
@@ -58,7 +67,6 @@ export class CategoryService {
                         `Erro: ${JSON.stringify(error.error)}`);
                 }
                 // retornar um observable com uma mensagem amigavel.
-                console.log(error)
                 return throwError(`DELETE: ${JSON.stringify(error.error)}`);
                 `Network Error: ${error.statusText} (${error.status})`
                 throwError(`DELETE: ${error.statusText} ${JSON.stringify(error.error)} (Código do Erro: ${error.status})`)

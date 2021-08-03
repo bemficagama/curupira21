@@ -10,6 +10,7 @@ import { CategoryService } from '../shared/category.service';
   styleUrls: ['./category-read.component.css']
 })
 export class CategoryReadComponent implements OnInit {
+
   private locator = (c: Category, id: number) => c.id == id;
 
   categories: Category[] = new Array<Category>();

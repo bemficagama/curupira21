@@ -22,6 +22,7 @@ import { HomeComponent } from './layout/home/home.component';
 import { AuthenticationComponent } from './layout/authentication/authentication.component';
 import { httpInterceptorProviders } from "./http-interceptors";
 import { MessageModule } from './messages/message.module';
+import { AlertModule } from './_alert';
 
 @NgModule({
   declarations: [
@@ -36,7 +37,7 @@ import { MessageModule } from './messages/message.module';
     FormsModule,
     ReactiveFormsModule,
     HttpClientModule,
-    AppRoutingModule, MessageModule
+    AppRoutingModule, MessageModule, AlertModule
   ],
   providers: [MessageService, httpInterceptorProviders, CategoryService],
   bootstrap: [AppComponent]
