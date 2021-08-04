@@ -5,6 +5,7 @@ module.exports = app => {
         const category = {
             id: req.body.id,
             name: req.body.name,
+            description: req.body.description,
             parentId: req.body.parentId
         }
 
@@ -12,6 +13,7 @@ module.exports = app => {
 
         try {
             existsOrError(category.name, 'Nome não informado')
+            existsOrError(category.description, 'Descrição não informada')
         } catch (msg) {
             return res.status(400).send(msg)
         }
@@ -30,7 +32,7 @@ module.exports = app => {
         }
     }
 
-    const remove = async(req, res) => {
+    const remove = async (req, res) => {
         try {
             existsOrError(req.params.id, 'Código da Categoria não informado.')
 
@@ -71,7 +73,7 @@ module.exports = app => {
                 parent = getParent(categories, parent.parentId)
             }
 
-            return {...category, path }
+            return { ...category, path }
         })
 
         categoriesWithPath.sort((a, b) => {
@@ -83,7 +85,7 @@ module.exports = app => {
         return categoriesWithPath
     }
 
-    const getAll = async(req, res) => {
+    const getAll = async (req, res) => {
         const page = req.query.page || 1
         const pageSize = req.query.size || 5
 

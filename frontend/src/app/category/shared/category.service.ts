@@ -6,7 +6,6 @@ import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { Category } from './category';
 import { CategoryRequest } from './categoryRequest';
-import { AlertService } from 'src/app/_alert';
 
 const httpOptions = {
     headers: new HttpHeaders({
@@ -20,17 +19,12 @@ const PORT = 4000;
 
 @Injectable()
 export class CategoryService {
-    options = {
-        autoClose: true,
-        keepAfterRouteChange: false
-    };
 
     baseUrl: string;
     //heroesUrl = 'api/heroes';  // URL to web api
 
     constructor(
-        private http: HttpClient,
-        protected alertService: AlertService
+        private http: HttpClient
     ) {
         this.baseUrl = `${PROTOCOL}://${location.hostname}:${PORT}/`;
     }
@@ -38,7 +32,27 @@ export class CategoryService {
 
     getCategories(page: number = 1, size: number = 4): Observable<CategoryRequest | null> {
         return this.http.get<CategoryRequest>(this.baseUrl + "categories?page=" + page + "&size=" + size)
-        //.pipe(catchError(this.handleError('getCategories', null)))
+            .pipe(catchError((error: HttpErrorResponse) => {
+                let msg: string
+                if (error.error instanceof ErrorEvent) {
+                    // Erro de client-side ou de rede
+                    msg = error.error.message
+                    console.error('Ocorreu um erro:', error.error.message);
+                } if (error.status == 0) {
+                    msg = "Sem comunicação com o servidor"
+                    console.error(
+                        `Código do erro ${error.status}, ` +
+                        `Erro: ${msg}`);
+                } else {
+                    // Erro retornando pelo backend
+                    msg = JSON.stringify(error.error.status)
+                    console.error(
+                        `Código do erro ${error.status}, ` +
+                        `Erro: ${JSON.stringify(error.error)}`);
+                }
+                // retornar um observable com uma mensagem amigavel.
+                return throwError(`CARREGAR: ${msg}`);
+            }));
     }
 
     readById(id: number) {
@@ -49,7 +63,38 @@ export class CategoryService {
 
     update(category: Category): Observable<Category> {
         return this.http.put<Category>(`${environment.api}/categories/${category.id}`, category)
-        //.pipe(catchError(this.handleError('category.getById', category)))
+            .pipe(catchError((error: HttpErrorResponse) => {
+
+                if (error.error instanceof ErrorEvent) {
+                    // Erro de client-side ou de rede
+                    console.error('Ocorreu um erro:', error.error.message);
+                } else {
+                    // Erro retornando pelo backend
+                    console.error(
+                        `Código do erro ${error.status}, ` +
+                        `Erro: ${JSON.stringify(error.error)}`);
+                }
+                // retornar um observable com uma mensagem amigavel.
+                return throwError(`ATUALIZAR: ${JSON.stringify(error.error)}`);
+            }));
+    }
+
+    save(category: Category): Observable<Category> {
+        return this.http.post<Category>(`${environment.api}/categories`, category)
+            .pipe(catchError((error: HttpErrorResponse) => {
+
+                if (error.error instanceof ErrorEvent) {
+                    // Erro de client-side ou de rede
+                    console.error('Ocorreu um erro:', error.error.message);
+                } else {
+                    // Erro retornando pelo backend
+                    console.error(
+                        `Código do erro ${error.status}, ` +
+                        `Erro: ${JSON.stringify(error.error)}`);
+                }
+                // retornar um observable com uma mensagem amigavel.
+                return throwError(`SALVAR: ${JSON.stringify(error.error)}`);
+            }));
     }
 
     deleteCategory(id: number): Observable<unknown> {

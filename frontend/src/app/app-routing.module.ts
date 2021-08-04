@@ -3,6 +3,7 @@ import { Routes, RouterModule, PreloadAllModules } from '@angular/router';
 import { HomeComponent } from "./layout/home/home.component";
 import { CategoryReadComponent } from "./category/category-read/category-read.component";
 import { CategoryUpdateComponent } from './category/category-update/category-update.component';
+import { CategoryCreateComponent } from './category/category-create/category-create.component';
 import { KeyComponent } from './key/key.component';
 import { UrlComponent } from './url/url.component';
 import { BemvindoComponent } from "./bemvindo/bemvindo.component";
@@ -19,7 +20,8 @@ const routes: Routes = [
     children: [
       { path: '', component: BemvindoComponent },
       { path: 'category', component: CategoryReadComponent},
-      { path: 'category/category-update/:id', component: CategoryUpdateComponent}
+      { path: 'category/category-update/:id', component: CategoryUpdateComponent},
+      { path: 'category/category-create', component: CategoryCreateComponent}
     ],
     canActivate: [AuthGuard]
   },

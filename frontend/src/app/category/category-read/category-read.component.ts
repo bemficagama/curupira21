@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 
 import { Category } from '../shared/category';
 import { CategoryService } from '../shared/category.service';
+import { AlertService } from 'src/app/_alert';
 
 @Component({
   selector: 'app-category-read',
@@ -10,6 +11,11 @@ import { CategoryService } from '../shared/category.service';
   styleUrls: ['./category-read.component.css']
 })
 export class CategoryReadComponent implements OnInit {
+
+  options = {
+    autoClose: true,
+    keepAfterRouteChange: false
+  };
 
   private locator = (c: Category, id: number) => c.id == id;
 
@@ -24,7 +30,10 @@ export class CategoryReadComponent implements OnInit {
   public firstPage = 1;
   public lastPage = 1;
 
-  constructor(private categoryService: CategoryService) { }
+  constructor(
+    private categoryService: CategoryService,
+    protected alertService: AlertService
+  ) { }
 
   ngOnInit() {
     this.getCategory();
@@ -39,10 +48,6 @@ export class CategoryReadComponent implements OnInit {
         this.quantityPages = Math.ceil(count / this.quantityPerPage)
         this.groups = this.separar(this.pages, 5)
       })
-  }
-
-  navigateToProductCreate(): void {
-
   }
 
   edit(category: Category) {
@@ -62,6 +67,7 @@ export class CategoryReadComponent implements OnInit {
       if (index > -1) {
         this.categories.splice(index, 1);
       }
+      this.alertService.success('Sucesso: Categoria Excluída!', this.options)
     });
   }
 

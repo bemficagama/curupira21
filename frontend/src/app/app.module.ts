@@ -10,6 +10,7 @@ import {
 import { AppRoutingModule } from './app-routing.module';
 import { CategoryReadComponent } from './category/category-read/category-read.component';
 import { CategoryUpdateComponent } from './category/category-update/category-update.component';
+import { CategoryCreateComponent } from './category/category-create/category-create.component';
 import { CategoryService } from './category/shared/category.service';
 import { KeyComponent } from './key/key.component';
 import { UrlComponent } from './url/url.component';
@@ -29,7 +30,7 @@ import { AlertModule } from './_alert';
     AppComponent,
     FooterComponent,
     HeaderComponent,
-    CategoryReadComponent, CategoryUpdateComponent,
+    CategoryReadComponent, CategoryUpdateComponent, CategoryCreateComponent,
     KeyComponent, UrlComponent, LoginComponent, CreateAccountComponent, HomeComponent, AuthenticationComponent
   ],
   imports: [

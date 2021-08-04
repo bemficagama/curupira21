@@ -5,17 +5,17 @@ import { Component, OnInit } from "@angular/core";
 import { AlertService } from 'src/app/_alert';
 
 @Component({
-  selector: "app-category-update",
-  templateUrl: "./category-update.component.html",
-  styleUrls: ["./category-update.component.css"],
+  selector: "app-category-create",
+  templateUrl: "./category-create.component.html",
+  styleUrls: ["./category-create.component.css"],
 })
-export class CategoryUpdateComponent implements OnInit {
+export class CategoryCreateComponent implements OnInit {
   options = {
     autoClose: true,
     keepAfterRouteChange: false
   };
 
-  category: Category = {};
+  category: Category = {}
 
   constructor(
     private categoryService: CategoryService,
@@ -25,16 +25,12 @@ export class CategoryUpdateComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    const id = +this.route.snapshot.paramMap.get("id")!;
-    this.categoryService.readById(id).subscribe(category => {
-      this.category = category!
-    });
   }
 
   save(): void {
-    this.categoryService.update(this.category).subscribe(() => {
+    this.categoryService.save(this.category).subscribe(() => {
       this.router.navigate(["/category"]);
-      this.alertService.success('Sucesso: Categoria Atualizada!', this.options)
+      this.alertService.success('Sucesso: Categoria Criada!', this.options)
     });
   }
 
