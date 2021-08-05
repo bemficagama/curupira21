@@ -9,6 +9,7 @@ import { AuthenticationComponent } from './layout/authentication/authentication.
 import { LoginComponent } from './account/login/login.component';
 import { CreateAccountComponent } from './account/create-account/create-account.component';
 import { AuthGuard } from './account/shared/auth.guard';
+import { NotFoundComponent } from './layout/not-found/not-found.component';
 
 
 const routes: Routes = [
@@ -17,9 +18,9 @@ const routes: Routes = [
     component: HomeComponent,
     children: [
       { path: '', component: BemvindoComponent },
-      { path: 'category', component: CategoryReadComponent},
-      { path: 'category/category-update/:id', component: CategoryUpdateComponent},
-      { path: 'category/category-create', component: CategoryCreateComponent}
+      { path: 'category', component: CategoryReadComponent },
+      { path: 'category/category-update/:id', component: CategoryUpdateComponent },
+      { path: 'category/category-create', component: CategoryCreateComponent },
     ],
     canActivate: [AuthGuard]
   },
@@ -28,9 +29,11 @@ const routes: Routes = [
     path: '',
     component: AuthenticationComponent,
     children: [
-      { path: '', redirectTo: 'login', pathMatch: 'full'},
-      { path: 'login', component: LoginComponent},
-      { path: 'create-account', component: CreateAccountComponent}
+      { path: '', redirectTo: 'login', pathMatch: 'full' },
+      { path: 'login', component: LoginComponent },
+      { path: 'create-account', component: CreateAccountComponent },
+      { path: '404', component: NotFoundComponent },
+      { path: '**', redirectTo: '/404' }
     ]
   }
 ];
@@ -42,7 +45,7 @@ const routes: Routes = [
     // of the modules (PRs welcome 😉)
     preloadingStrategy: PreloadAllModules,
     relativeLinkResolution: 'legacy'
-})],
+  })],
   exports: [RouterModule]
 })
-export class AppRoutingModule {}
+export class AppRoutingModule { }

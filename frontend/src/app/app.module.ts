@@ -21,6 +21,7 @@ import { HomeComponent } from './layout/home/home.component';
 import { AuthenticationComponent } from './layout/authentication/authentication.component';
 import { httpInterceptorProviders } from "./http-interceptors";
 import { AlertModule } from './_alert';
+import { NotFoundComponent } from './layout/not-found/not-found.component';
 
 @NgModule({
   declarations: [
@@ -28,7 +29,7 @@ import { AlertModule } from './_alert';
     FooterComponent,
     HeaderComponent,
     CategoryReadComponent, CategoryUpdateComponent, CategoryCreateComponent,
-    LoginComponent, CreateAccountComponent, HomeComponent, AuthenticationComponent
+    LoginComponent, CreateAccountComponent, HomeComponent, AuthenticationComponent, NotFoundComponent
   ],
   imports: [
     BrowserModule,
