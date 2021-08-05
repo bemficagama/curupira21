@@ -19,18 +19,20 @@ export class CategoryReadComponent implements OnInit {
 
   private locator = (c: Category, id: number) => c.id == id;
 
-  categories: Category[] = new Array<Category>();
+  categories: Category[] = new Array<Category>()
   mainCategories: Category[] = new Array<Category>()
   editCategory: Category | undefined; // the Entity currently being edited
-  quantityPages: number = 0;
-  groupIndex: number = 0;
+  quantityPages: number = 0
+  groupIndex: number = 0
   groups: number[][] = []
+  
 
   public quantityPerPage = 4;
   public selectedPage = 1;
   public firstPage = 1;
   public lastPage = 1;
   public mainCategory = 0
+  public search: string = ''
 
   constructor(
     private categoryService: CategoryService,
@@ -44,7 +46,7 @@ export class CategoryReadComponent implements OnInit {
 
   getCategory(): void {
     let count: number = 0;
-    this.categoryService.getCategories(this.selectedPage, this.quantityPerPage, this.mainCategory)
+    this.categoryService.getCategories(this.selectedPage, this.quantityPerPage, this.mainCategory, this.search)
       .subscribe(data => {
         this.categories = data!.data
         count = data!.count
@@ -175,9 +177,12 @@ export class CategoryReadComponent implements OnInit {
     this.changePageSize(size)
   }
 
-  onMainChange($event: any) {
-    this.mainCategory = Number($event.value)
+  onMainChange() {
     this.groupIndex = 0
     this.changePage(1);
+  }
+
+  onEnter() {
+    console.log(this.search);
   }
 }

@@ -6,15 +6,21 @@
                 Nova Categoria
             </button>
         </div>
-        <div class="col-md-10">
-            <div class="form-group bg-secondary bg-gradient p-2">
+        <div class="col-md-5">
+            <div class="form-group ">
                 <label>Categotia Principal</label>
-                <select class="form-control" (change)="onMainChange($event.target)" [value]="mainCategory">
+                <select class="form-control" (change)="onMainChange()" [(ngModel)]="mainCategory">
                     <option value=0>Nenhuma Selecionada</option>
                     <option *ngFor="let main of mainCategories" value="{{main.id}}">
                         {{main.name}}
                     </option>
                 </select>
+            </div>
+        </div>
+        <div class="col-md-5">
+            <div class="form-group ">
+                <label>Pesquisa</label>
+                <input class="form-control" name="search" id="search" (keyup.enter)="onEnter()" [(ngModel)]="search" />
             </div>
         </div>
     </div>
