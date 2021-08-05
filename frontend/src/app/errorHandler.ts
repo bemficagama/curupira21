@@ -1,6 +1,5 @@
 import { ErrorHandler, Injectable, NgZone } from "@angular/core";
 import { MessageService } from "./message.service";
-import { Message } from "./message.model";
 import { AlertService } from 'src/app/_alert';
 
 @Injectable()

@@ -12,8 +12,6 @@ import { CategoryReadComponent } from './category/category-read/category-read.co
 import { CategoryUpdateComponent } from './category/category-update/category-update.component';
 import { CategoryCreateComponent } from './category/category-create/category-create.component';
 import { CategoryService } from './category/shared/category.service';
-import { KeyComponent } from './key/key.component';
-import { UrlComponent } from './url/url.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { MessageService } from "./message.service";
@@ -22,7 +20,6 @@ import { CreateAccountComponent } from './account/create-account/create-account.
 import { HomeComponent } from './layout/home/home.component';
 import { AuthenticationComponent } from './layout/authentication/authentication.component';
 import { httpInterceptorProviders } from "./http-interceptors";
-import { MessageModule } from './messages/message.module';
 import { AlertModule } from './_alert';
 
 @NgModule({
@@ -31,14 +28,14 @@ import { AlertModule } from './_alert';
     FooterComponent,
     HeaderComponent,
     CategoryReadComponent, CategoryUpdateComponent, CategoryCreateComponent,
-    KeyComponent, UrlComponent, LoginComponent, CreateAccountComponent, HomeComponent, AuthenticationComponent
+    LoginComponent, CreateAccountComponent, HomeComponent, AuthenticationComponent
   ],
   imports: [
     BrowserModule,
     FormsModule,
     ReactiveFormsModule,
     HttpClientModule,
-    AppRoutingModule, MessageModule, AlertModule
+    AppRoutingModule, AlertModule
   ],
   providers: [MessageService, httpInterceptorProviders, CategoryService],
   bootstrap: [AppComponent]

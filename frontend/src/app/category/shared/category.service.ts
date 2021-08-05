@@ -1,18 +1,10 @@
 import { environment } from './../../../environments/environment';
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpErrorResponse, HttpParams } from '@angular/common/http';
-import { HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { Category } from './category';
 import { CategoryRequest } from './categoryRequest';
-
-const httpOptions = {
-    headers: new HttpHeaders({
-        'Content-Type': 'application/json',
-        Authorization: 'my-auth-token'
-    })
-};
 
 @Injectable()
 export class CategoryService {
@@ -20,7 +12,6 @@ export class CategoryService {
     constructor(
         private http: HttpClient
     ) {}
-
 
     getCategories(page: number = 1, size: number = 4, parentId : number): Observable<CategoryRequest | null> {
         return this.http.get<CategoryRequest>(`${environment.api}/categories?page=${page}&size=${size}&parentId=${parentId}`)
@@ -132,45 +123,5 @@ export class CategoryService {
                 `Network Error: ${error.statusText} (${error.status})`
                 throwError(`DELETE: ${error.statusText} ${JSON.stringify(error.error)} (Código do Erro: ${error.status})`)
             }));
-
-        //.pipe(catchError(this.handleError('deleteCategory', id)))
     }
-
-    /* GET heroes whose name contains search term */
-    /* searchHeroes(term: string): Observable<Hero[]> {
-        term = term.trim();
-
-        // Add safe, URL encoded search parameter if there is a search term
-        const options = term ?
-            { params: new HttpParams().set('name', term) } : {};
-
-        return this.http.get<Hero[]>(this.heroesUrl, options)
-            .pipe(
-                catchError(this.handleError<Hero[]>('searchHeroes', []))
-            );
-    } */
-
-    //////// Save methods //////////
-
-    /** POST: add a new hero to the database */
-    /* addHero(hero: Hero): Observable<Hero> {
-        return this.http.post<Hero>(this.heroesUrl, hero, httpOptions)
-            .pipe(
-                catchError(this.handleError('addHero', hero))
-            );
-    } */
-
-    /** DELETE: delete the hero from the server */
-
-
-    /** PUT: update the hero on the server. Returns the updated hero upon success. */
-    /* updateHero(hero: Hero): Observable<Hero> {
-        httpOptions.headers =
-            httpOptions.headers.set('Authorization', 'my-new-auth-token');
-
-        return this.http.put<Hero>(this.heroesUrl, hero, httpOptions)
-            .pipe(
-                catchError(this.handleError('updateHero', hero))
-            );
-    } */
 }
