@@ -16,13 +16,20 @@ export class CategoryCreateComponent implements OnInit {
   };
 
   category: Category = {}
+  mainCategories: Category[] = new Array<Category>()
+  public mainCategory: number = 0
 
   constructor(
     private categoryService: CategoryService,
     private router: Router,
-    private route: ActivatedRoute,
-    protected alertService: AlertService
-  ) { }
+    activeRoute: ActivatedRoute,
+    protected alertService: AlertService) {
+
+    this.categoryService.getMains().subscribe(data => {
+      this.mainCategories = data!
+    })
+
+  }
 
   ngOnInit(): void {
   }
@@ -36,5 +43,10 @@ export class CategoryCreateComponent implements OnInit {
 
   cancel(): void {
     this.router.navigate(["/category"]);
+  }
+
+  onMainChange($event: any) {
+    this.mainCategory = Number($event.value)
+    this.category.parentId = this.mainCategory
   }
 }

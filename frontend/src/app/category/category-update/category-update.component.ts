@@ -16,22 +16,35 @@ export class CategoryUpdateComponent implements OnInit {
   };
 
   category: Category = {};
+  mainCategories: Category[] = new Array<Category>()
+  public mainCategory: number = 0
 
   constructor(
     private categoryService: CategoryService,
     private router: Router,
-    private route: ActivatedRoute,
-    protected alertService: AlertService
-  ) { }
+    private activeRoute: ActivatedRoute,
+    protected alertService: AlertService) {
+    activeRoute.params.subscribe(params => {
+      let id = params["id"];
+      if (id != null) {
+        this.categoryService.getMains().subscribe(data => {
+          this.mainCategories = data!
+          this.categoryService.readById(id).subscribe(category => {
+            this.category = category!
+            this.mainCategory = Number(category.parentId)
+          });
+        })
 
-  ngOnInit(): void {
-    const id = +this.route.snapshot.paramMap.get("id")!;
-    this.categoryService.readById(id).subscribe(category => {
-      this.category = category!
-    });
+      }
+    })
   }
 
+  ngOnInit(): void { }
+
   save(): void {
+    if (JSON.stringify(this.category.parentId) == "") this.category.parentId = null
+    console.log(JSON.stringify(this.category.parentId))
+
     this.categoryService.update(this.category).subscribe(() => {
       this.router.navigate(["/category"]);
       this.alertService.success('Sucesso: Categoria Atualizada!', this.options)
@@ -40,5 +53,10 @@ export class CategoryUpdateComponent implements OnInit {
 
   cancel(): void {
     this.router.navigate(["/category"]);
+  }
+
+  onMainChange($event: any) {
+    this.mainCategory = Number($event.value)
+    this.category.parentId = this.mainCategory
   }
 }

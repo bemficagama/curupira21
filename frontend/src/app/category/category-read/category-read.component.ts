@@ -20,6 +20,7 @@ export class CategoryReadComponent implements OnInit {
   private locator = (c: Category, id: number) => c.id == id;
 
   categories: Category[] = new Array<Category>();
+  mainCategories: Category[] = new Array<Category>()
   editCategory: Category | undefined; // the Entity currently being edited
   quantityPages: number = 0;
   groupIndex: number = 0;
@@ -29,19 +30,21 @@ export class CategoryReadComponent implements OnInit {
   public selectedPage = 1;
   public firstPage = 1;
   public lastPage = 1;
+  public mainCategory = 0
 
   constructor(
     private categoryService: CategoryService,
     protected alertService: AlertService
-  ) { }
+  ) {}
 
   ngOnInit() {
-    this.getCategory();
+    this.getCategory()
+    this.getMains()
   }
 
   getCategory(): void {
     let count: number = 0;
-    this.categoryService.getCategories(this.selectedPage, this.quantityPerPage)
+    this.categoryService.getCategories(this.selectedPage, this.quantityPerPage, this.mainCategory)
       .subscribe(data => {
         this.categories = data!.data
         count = data!.count
@@ -50,16 +53,10 @@ export class CategoryReadComponent implements OnInit {
       })
   }
 
-  edit(category: Category) {
-    console.log("editar")
-    //vai para CategoryEditComponent
+  getMains(): void {
+    this.categoryService.getMains()
+      .subscribe(data => this.mainCategories = data!)
   }
-
-  /* delete(category: Category): void {
-    this.categories = this.categories.filter(c => c !== category);
-    this.categoryService.deleteCategory(category.id!)
-      .subscribe(data => { });
-  } */
 
   delete(category: Category) {
     this.categoryService.deleteCategory(category.id!).subscribe(() => {
@@ -176,5 +173,11 @@ export class CategoryReadComponent implements OnInit {
   onChangeSize($event: any) {
     const size: number = $event.value
     this.changePageSize(size)
+  }
+
+  onMainChange($event: any) {
+    this.mainCategory = Number($event.value)
+    this.groupIndex = 0
+    this.changePage(1);
   }
 }

@@ -1,10 +1,23 @@
 <div class="container app-category-read">
     <div id="snackbar">Some text some message..</div>
-
-    <button class="btn btn-success" routerLink="/category/category-create">
-        Nova Categoria
-    </button>
-
+    <div class="row">
+        <div class="col-md-2">
+            <button class="btn btn-success" routerLink="/category/category-create">
+                Nova Categoria
+            </button>
+        </div>
+        <div class="col-md-10">
+            <div class="form-group bg-secondary bg-gradient p-2">
+                <label>Categotia Principal</label>
+                <select class="form-control" (change)="onMainChange($event.target)" [value]="mainCategory">
+                    <option value=0>Nenhuma Selecionada</option>
+                    <option *ngFor="let main of mainCategories" value="{{main.id}}">
+                        {{main.name}}
+                    </option>
+                </select>
+            </div>
+        </div>
+    </div>
     <div class="mt-3">
         <table class="table table-bordered table-striped p-2">
             <thead>

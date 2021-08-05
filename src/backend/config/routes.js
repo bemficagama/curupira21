@@ -20,9 +20,9 @@ module.exports = app => {
         .post(app.api.category.save)
 
     // Cuidado com ordem! Tem que vir antes de /categories/:id
-    app.route('/categories/tree')
+    app.route('/categories/mains')
         .all(app.config.passport.authenticate())
-        .get(app.api.category.getTree)
+        .get(app.api.category.getMains)
 
     app.route('/categories/:id')
         .all(app.config.passport.authenticate())

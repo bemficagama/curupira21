@@ -6,7 +6,7 @@ module.exports = app => {
             id: req.body.id,
             name: req.body.name,
             description: req.body.description,
-            parentId: req.body.parentId
+            parentId: Number(req.body.parentId) == 0 ? null : Number(req.body.parentId)
         }
 
         if (req.params.id) category.id = req.params.id
@@ -88,11 +88,13 @@ module.exports = app => {
     const getAll = async (req, res) => {
         const page = req.query.page || 1
         const pageSize = req.query.size || 5
+        const main = Number(req.query.parentId) == 0 ? null : Number(req.query.parentId)
 
-        const result = await app.db('categories').count('id', { as: 'count' }).first()
+        const result = await app.db('categories').where('parentId', main).orWhereRaw(`(${Number(main) == 0 ? true : false})`).count('id', { as: 'count' }).first()
         const count = parseInt(result.count)
 
         app.db('categories')
+            .where('parentId', main).orWhereRaw(`(${Number(main) == 0 ? true : false})`)
             .limit(pageSize).offset(page * pageSize - pageSize)
             .then(categories => res.json({ data: withPath(categories), count }))
             .catch(err => res.status(500).send(err))
@@ -102,6 +104,13 @@ module.exports = app => {
         app.db('categories')
             .where({ id: req.params.id })
             .first()
+            .then(category => res.json(category))
+            .catch(err => res.status(500).send(err))
+    }
+
+    const getMains = (req, res) => {
+        app.db('categories')
+            .whereNull('parentId')
             .then(category => res.json(category))
             .catch(err => res.status(500).send(err))
     }
@@ -122,5 +131,5 @@ module.exports = app => {
             .catch(err => res.status(500).send(err))
     }
 
-    return { save, remove, getAll, getById, getTree }
+    return { save, remove, getAll, getById, getTree, getMains }
 }

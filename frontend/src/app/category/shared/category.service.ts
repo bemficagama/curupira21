@@ -14,24 +14,41 @@ const httpOptions = {
     })
 };
 
-const PROTOCOL = "http";
-const PORT = 4000;
-
 @Injectable()
 export class CategoryService {
 
-    baseUrl: string;
-    //heroesUrl = 'api/heroes';  // URL to web api
-
     constructor(
         private http: HttpClient
-    ) {
-        this.baseUrl = `${PROTOCOL}://${location.hostname}:${PORT}/`;
+    ) {}
+
+
+    getCategories(page: number = 1, size: number = 4, parentId : number): Observable<CategoryRequest | null> {
+        return this.http.get<CategoryRequest>(`${environment.api}/categories?page=${page}&size=${size}&parentId=${parentId}`)
+            .pipe(catchError((error: HttpErrorResponse) => {
+                let msg: string
+                if (error.error instanceof ErrorEvent) {
+                    // Erro de client-side ou de rede
+                    msg = error.error.message
+                    console.error('Ocorreu um erro:', error.error.message);
+                } if (error.status == 0) {
+                    msg = "Sem comunicação com o servidor"
+                    console.error(
+                        `Código do erro ${error.status}, ` +
+                        `Erro: ${msg}`);
+                } else {
+                    // Erro retornando pelo backend
+                    msg = JSON.stringify(error.error.status)
+                    console.error(
+                        `Código do erro ${error.status}, ` +
+                        `Erro: ${JSON.stringify(error.error)}`);
+                }
+                // retornar um observable com uma mensagem amigavel.
+                return throwError(`CARREGAR: ${msg}`);
+            }));
     }
 
-
-    getCategories(page: number = 1, size: number = 4): Observable<CategoryRequest | null> {
-        return this.http.get<CategoryRequest>(this.baseUrl + "categories?page=" + page + "&size=" + size)
+    getMains(): Observable<Category[]| null> {
+        return this.http.get<Category[]>(`${environment.api}/categories/mains`)
             .pipe(catchError((error: HttpErrorResponse) => {
                 let msg: string
                 if (error.error instanceof ErrorEvent) {
@@ -98,7 +115,6 @@ export class CategoryService {
     }
 
     deleteCategory(id: number): Observable<unknown> {
-        const url = `${this.baseUrl + "categories"}/${id}`;
         return this.http.delete(`${environment.api}/categories/${id}`)
             .pipe(catchError((error: HttpErrorResponse) => {
 
