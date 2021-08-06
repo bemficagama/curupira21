@@ -39,7 +39,7 @@ export class KeyUpdateComponent implements OnInit {
     })
   }
 
-  ngOnInit(): void { }
+  ngOnInit(): void {}
 
   save(): void {
     //if (JSON.stringify(this.key.parentId) == "") this.key.parentId = null
