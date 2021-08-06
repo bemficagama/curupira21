@@ -32,8 +32,34 @@ module.exports = app => {
 
     app.route('/keys')
         .all(app.config.passport.authenticate())
-        .get(app.api.key.get)
+        .get(app.api.key.getAll)
         .post(app.api.key.save)
+
+    app.route('/keys/categories')
+        .all(app.config.passport.authenticate())
+        .get(app.api.key.getCategories)
+
+    app.route('/keys/:id')
+        .all(app.config.passport.authenticate())
+        .get(app.api.key.getById)
+        .put(app.api.key.save)
+        .delete(app.api.key.remove)
+
+        app.route('/urls')
+        .all(app.config.passport.authenticate())
+        .get(app.api.url.getAll)
+        .post(app.api.url.save)
+
+    app.route('/urls/categories')
+        .all(app.config.passport.authenticate())
+        .get(app.api.url.getCategories)
+
+    app.route('/urls/:id')
+        .all(app.config.passport.authenticate())
+        .get(app.api.url.getById)
+        .put(app.api.url.save)
+        .delete(app.api.url.remove)
+
 
     /* app.route('/articles/:id')
         .all(app.config.passport.authenticate())

@@ -2,6 +2,5 @@ export interface Category {
     id?: number,
     name?: string,
     description?: string,
-    parentId?: number | null,
-    path?: string
+    parentId?: number | null
 }

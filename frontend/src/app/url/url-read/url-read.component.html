@@ -1,18 +1,18 @@
-<div class="container app-category-read">
+<div class="container app-url-read">
     <div id="snackbar">Some text some message..</div>
     <div class="row">
         <div class="col-md-2">
-            <button class="btn btn-success" routerLink="/category/category-create">
-                Nova Categoria
+            <button class="btn btn-success" routerLink="/url/url-create">
+                Nova Url
             </button>
         </div>
         <div class="col-md-5">
             <div class="form-group ">
-                <label>Categoria Principal</label>
-                <select class="form-control" (change)="onMainChange()" [(ngModel)]="mainCategory">
+                <label>Categorias</label>
+                <select class="form-control" (change)="onCategoryChange()" [(ngModel)]="category">
                     <option value=0>Nenhuma Selecionada</option>
-                    <option *ngFor="let main of mainCategories" value="{{main.id}}">
-                        {{main.name}}
+                    <option *ngFor="let category of categories" value="{{category.id}}">
+                        {{category.name}}
                     </option>
                 </select>
             </div>
@@ -29,24 +29,22 @@
             <thead>
                 <tr>
                     <th class="col">#</th>
-                    <th class="col col-md-3">Nome</th>
-                    <th class="col col-md-8">Descrição</th>
+                    <th class="col col-md-11">Url</th>
                     <th class="col col-md-1">Ação</th>
                 </tr>
             </thead>
             <tbody>
-                <tr *ngIf="categories.length == 0">
-                    <td colspan="4" class="text-center">
-                        Lista de Categoria Vazia!
+                <tr *ngIf="urls.length == 0">
+                    <td colspan="3" class="text-center">
+                        Lista de Urls Vazia!
                     </td>
                 </tr>
-                <tr *ngFor="let category of categories; index as i">
+                <tr *ngFor="let url of urls; index as i">
                     <th scope="row">{{i+1}}</th>
-                    <td>{{category.name}}</td>
-                    <td>{{category.description}}</td>
+                    <td>{{url.url}}</td>
                     <td class="text-center">
-                        <a routerLink="/category/category-update/{{category.id}}"><i class="fas fa-edit edit"></i></a>
-                        <a (click)="delete(category)"><i class="fas fa-trash delete"></i></a>
+                        <a routerLink="/url/url-update/{{url.id}}"><i class="fas fa-edit edit"></i></a>
+                        <a (click)="delete(url)"><i class="fas fa-trash delete"></i></a>
                     </td>
                 </tr>
             </tbody>

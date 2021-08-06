@@ -58,7 +58,7 @@ module.exports = app => {
         }
     }
 
-    const withPath = categories => {
+    /* const withPath = categories => {
         const getParent = (categories, parentId) => {
             const parent = categories.filter(parent => parent.id === parentId)
             return parent.length ? parent[0] : null
@@ -84,19 +84,33 @@ module.exports = app => {
 
         return categoriesWithPath
     }
-
+ */
     const getAll = async (req, res) => {
         const page = req.query.page || 1
         const pageSize = req.query.size || 5
         const main = Number(req.query.parentId) == 0 ? null : Number(req.query.parentId)
+        const search = req.query.search || ''
 
-        const result = await app.db('categories').where('parentId', main).orWhereRaw(`(${Number(main) == 0 ? true : false})`).count('id', { as: 'count' }).first()
+        const result = await app.db('categories')
+            .where(function () {
+                this.where('parentId', main).orWhereRaw(`(${Number(main) == 0 ? true : false})`)
+            })
+            .andWhere(function () {
+                this.where('name', 'like', `%${search}%`)
+                //.orWhere(true)
+            }).count('id', { as: 'count' }).first()
         const count = parseInt(result.count)
 
         app.db('categories')
-            .where('parentId', main).orWhereRaw(`(${Number(main) == 0 ? true : false})`)
+            .where(function () {
+                this.where('parentId', main).orWhereRaw(`(${Number(main) == 0 ? true : false})`)
+            })
+            .andWhere(function () {
+                this.where('name', 'like', `%${search}%`)
+            })
             .limit(pageSize).offset(page * pageSize - pageSize)
-            .then(categories => res.json({ data: withPath(categories), count }))
+            //.then(categories => res.json({ data: withPath(categories), count }))
+            .then(categories => res.json({ data: categories, count }))
             .catch(err => res.status(500).send(err))
     }
 

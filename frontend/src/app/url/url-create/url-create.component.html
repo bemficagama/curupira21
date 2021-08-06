@@ -1,0 +1,17 @@
+<div class="container app-category-update">
+    <div class="bg-primary p-2 text-white bg-warning text-dark">
+        <h5>Criar Categoria</h5>
+    </div>
+    <form (ngSubmit)="save()" #urlForm="ngForm">
+        <div class="form-group">
+            <label>Url</label>
+            <input class="form-control" name="url" id="url" [(ngModel)]="url.url"  #name="ngModel"/>
+        </div>
+        <button type="submit" class="btn btn-primary m-1 btn-warning">
+            Salvar
+        </button>
+        <button type="reset" class="btn btn-secondary" routerLink="/category">
+            Cancelar
+        </button>
+    </form>
+</div>

@@ -1,0 +1,17 @@
+<div class="container app-key-update">
+    <div class="bg-primary p-2 text-white bg-warning text-dark">
+        <h5>Alterar Chave</h5>
+    </div>
+    <form (ngSubmit)="save()" #keyForm="ngForm">
+        <div class="form-group">
+            <label>Chave</label>
+            <input class="form-control" name="key" id="key" [(ngModel)]="key.key" #name="ngModel" />
+        </div>
+        <button type="submit" class="btn btn-primary m-1 btn-warning">
+            Salvar
+        </button>
+        <button type="reset" class="btn btn-secondary" routerLink="/key">
+            Cancelar
+        </button>
+    </form>
+</div>

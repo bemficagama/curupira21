@@ -3,18 +3,19 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
-import { Category } from './category';
-import { CategoryRequest } from './categoryRequest';
+import { Key } from './key';
+import { KeyRequest } from './keyRequest';
+import { Category } from 'src/app/category/shared/category';
 
 @Injectable()
-export class CategoryService {
+export class KeyService {
 
     constructor(
         private http: HttpClient
     ) {}
 
-    getCategories(page: number = 1, size: number = 4, parentId: number, search: string = ''): Observable<CategoryRequest | null> {
-        return this.http.get<CategoryRequest>(`${environment.api}/categories?page=${page}&size=${size}&parentId=${parentId}&search=${search}`)
+    getKeys(page: number = 1, size: number = 4, categoryId: number = 0, search: string = ''): Observable<KeyRequest | null> {
+        return this.http.get<KeyRequest>(`${environment.api}/keys?page=${page}&size=${size}&categoryId=${categoryId}&search=${search}`)
             .pipe(catchError((error: HttpErrorResponse) => {
                 let msg: string
                 if (error.error instanceof ErrorEvent) {
@@ -38,8 +39,8 @@ export class CategoryService {
             }));
     }
 
-    getMains(): Observable<Category[]| null> {
-        return this.http.get<Category[]>(`${environment.api}/categories/mains`)
+    getCategories(): Observable<Category[]| null> {
+        return this.http.get<Category[]>(`${environment.api}/keys/categories`)
             .pipe(catchError((error: HttpErrorResponse) => {
                 let msg: string
                 if (error.error instanceof ErrorEvent) {
@@ -59,18 +60,18 @@ export class CategoryService {
                         `Erro: ${JSON.stringify(error.error)}`);
                 }
                 // retornar um observable com uma mensagem amigavel.
-                return throwError(`CARREGAR: ${msg}`);
+                return throwError(`CARREGAR CATEGORIAS: ${msg}`);
             }));
     }
 
     readById(id: number) {
-        return this.http.get<Category>(`${environment.api}/categories/${id}`)
+        return this.http.get<Key>(`${environment.api}/keys/${id}`)
         //.pipe(catchError(this.handleError('category.getById', null)))
 
     }
 
-    update(category: Category): Observable<Category> {
-        return this.http.put<Category>(`${environment.api}/categories/${category.id}`, category)
+    update(category: Key): Observable<Key> {
+        return this.http.put<Key>(`${environment.api}/keys/${category.id}`, category)
             .pipe(catchError((error: HttpErrorResponse) => {
 
                 if (error.error instanceof ErrorEvent) {
@@ -87,8 +88,8 @@ export class CategoryService {
             }));
     }
 
-    save(category: Category): Observable<Category> {
-        return this.http.post<Category>(`${environment.api}/categories`, category)
+    save(category: Key): Observable<Key> {
+        return this.http.post<Key>(`${environment.api}/keys`, category)
             .pipe(catchError((error: HttpErrorResponse) => {
 
                 if (error.error instanceof ErrorEvent) {
@@ -105,8 +106,8 @@ export class CategoryService {
             }));
     }
 
-    deleteCategory(id: number): Observable<unknown> {
-        return this.http.delete(`${environment.api}/categories/${id}`)
+    deleteKey(id: number): Observable<unknown> {
+        return this.http.delete(`${environment.api}/keys/${id}`)
             .pipe(catchError((error: HttpErrorResponse) => {
 
                 if (error.error instanceof ErrorEvent) {

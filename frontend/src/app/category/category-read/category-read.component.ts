@@ -162,19 +162,9 @@ export class CategoryReadComponent implements OnInit {
     this.getCategory()
   }
 
-  changePageSize(newSize: number) {
-    this.quantityPerPage = Number(newSize);
+  onChangeSize() {
     this.groupIndex = 0
     this.changePage(1);
-  }
-
-  get pageCount(): number {
-    return 1
-  }
-
-  onChangeSize($event: any) {
-    const size: number = $event.value
-    this.changePageSize(size)
   }
 
   onMainChange() {
@@ -183,6 +173,13 @@ export class CategoryReadComponent implements OnInit {
   }
 
   onEnter() {
-    console.log(this.search);
+    this.changePage(1)
+    this.getCategory()
+  }
+
+  onEscape() {
+    this.search = ''
+    this.changePage(1)
+    this.getCategory()
   }
 }

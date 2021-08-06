@@ -13,7 +13,7 @@
         </textarea>
         </div>
         <div class="form-group">
-            <label>Categotia Principal</label>
+            <label>Categoria Principal</label>
             <select class="form-control" (change)="onMainChange($event.target)" [value]="mainCategory">
                 <option value=0>Nenhuma Selecionada</option>
                 <option *ngFor="let main of mainCategories" value="{{main.id}}">

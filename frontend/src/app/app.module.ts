@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { ErrorHandler, NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { AppComponent } from './app.component';
 
@@ -8,37 +8,38 @@ import {
   //SharedModule
 } from './shared';
 import { AppRoutingModule } from './app-routing.module';
-import { CategoryReadComponent } from './category/category-read/category-read.component';
-import { CategoryUpdateComponent } from './category/category-update/category-update.component';
-import { CategoryCreateComponent } from './category/category-create/category-create.component';
-import { CategoryService } from './category/shared/category.service';
+import { CategoryModule } from './category/shared/category.module';
+import { KeyModule } from './key/shared/key.module';
+import { UrlModule } from './url/shared/url.module';
+
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { MessageService } from "./message.service";
 import { LoginComponent } from './account/login/login.component';
 import { CreateAccountComponent } from './account/create-account/create-account.component';
-import { HomeComponent } from './layout/home/home.component';
-import { AuthenticationComponent } from './layout/authentication/authentication.component';
+import { HomeComponent } from './shared/home/home.component';
+import { AuthenticationComponent } from './shared/authentication/authentication.component';
 import { httpInterceptorProviders } from "./http-interceptors";
 import { AlertModule } from './_alert';
-import { NotFoundComponent } from './layout/not-found/not-found.component';
+import { NotFoundComponent } from './shared/not-found/not-found.component';
+import { MessageErrorHandler } from './errorHandler';
 
 @NgModule({
   declarations: [
     AppComponent,
     FooterComponent,
     HeaderComponent,
-    CategoryReadComponent, CategoryUpdateComponent, CategoryCreateComponent,
     LoginComponent, CreateAccountComponent, HomeComponent, AuthenticationComponent, NotFoundComponent
   ],
   imports: [
     BrowserModule,
     FormsModule,
     ReactiveFormsModule,
-    HttpClientModule,
-    AppRoutingModule, AlertModule
+    HttpClientModule, 
+    AppRoutingModule, AlertModule, 
+    CategoryModule, KeyModule, UrlModule
   ],
-  providers: [MessageService, httpInterceptorProviders, CategoryService],
+  providers: [MessageService, httpInterceptorProviders, { provide: ErrorHandler, useClass: MessageErrorHandler }],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

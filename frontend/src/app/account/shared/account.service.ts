@@ -55,7 +55,7 @@ export class AccountService {
     return !(date.valueOf() > new Date().valueOf());
   }
 
-  isUserLoggedIn() {
+  isUserLoggedIn(): boolean {
     const token = this.getAuthorizationToken();
     if (!token) {
       return false;
@@ -65,5 +65,9 @@ export class AccountService {
 
     return true;
   }
+
+  clear() {
+    window.localStorage.setItem('token', '')
+}
 
 }
