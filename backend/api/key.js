@@ -1,3 +1,4 @@
+const { json } = require('body-parser')
 const queries = require('./queries')
 
 module.exports = app => {
@@ -8,8 +9,6 @@ module.exports = app => {
         const pageSize = req.query.size || 5
         const categoryId = Number(req.query.categoryId) || 0
         const search = req.query.search || ''
-
-        console.log(categoryId)
 
         const result = await app.db('keys')
             .leftJoin('key_has_categories', 'keys.id', 'key_has_categories.key_id')
@@ -30,13 +29,14 @@ module.exports = app => {
             .andWhere(function () {
                 this.where('key', 'like', `%${search}%`)
             })
+            .groupBy('id', 'key')
             .limit(pageSize).offset(page * pageSize - pageSize)
             .then(keys => res.json({ data: keys, count }))
             .catch(err => res.status(500).send(err))
     }
 
     const getCategories = async (req, res) => {
-        await app.db('categories')
+        return await app.db('categories')
             .orderBy('name', 'asc')
             .then(categories => res.json(categories))
             .catch(err => res.status(500).send(err))
@@ -47,6 +47,20 @@ module.exports = app => {
             id: req.body.id,
             key: req.body.key
         }
+
+        const categories = req.body.categories
+
+        const oldCategories = async () => {
+            return await app.db('key_has_categories')
+                .select('id')
+                .where('key_id', key.id)
+                .catch(err => res.status(500).send(err))
+        }
+
+        //const insCategories = categories.filter(x => !oldCategories.includes(x))
+        //const delCategories = oldCategories.filter(x => !categories.includes(x))
+
+        //insertKeyInCategories(insCategories)
 
         if (req.params.id) key.id = req.params.id
 
@@ -64,7 +78,19 @@ module.exports = app => {
                 .catch(err => res.status(500).send(err))
         } else {
             app.db('keys')
-                .insert(key)
+                .insert({ id: key.id, key: key.key })
+                .then(id => {
+                    if (categories) {
+                        rows = categories.map(category => {
+                            return { key_id: id, category_id: category }
+                        })
+                        console.log(rows.length)
+                        chunkSize = rows.length
+                        app.db('key_has_categories')
+                            .batchInsert(rows, chunckSize)
+                            .catch(err => res.status(500).send(err))
+                    }
+                })
                 .then(_ => res.status(204).send())
                 .catch(err => res.status(500).send(err))
         }
@@ -88,10 +114,22 @@ module.exports = app => {
     }
 
     const getById = (req, res) => {
+        const id = req.params.id
         app.db('keys')
             .where({ id: req.params.id })
             .first()
-            .then(key => res.json(key))
+            .then(key => {
+                app.db('key_has_categories')
+                    .select('category_id')
+                    .where('key_id', id)
+                    .then(categories => {
+                        key.categories = categories.map(reg => {
+                            return `${reg.category_id}`
+                        })
+                        res.json(key)
+                    })
+                    .catch(err => res.status(500).send(err))
+            })
             .catch(err => res.status(500).send(err))
     }
 

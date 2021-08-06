@@ -4,6 +4,7 @@ import { KeyService } from "../shared/key.service";
 import { Component, OnInit } from "@angular/core";
 import { AlertService } from 'src/app/_alert';
 import { Category } from "src/app/category/shared/category";
+import { THIS_EXPR } from "@angular/compiler/src/output/output_ast";
 
 @Component({
   selector: "app-key-update",
@@ -18,7 +19,7 @@ export class KeyUpdateComponent implements OnInit {
 
   key: Key = {};
   categories: Category[] = new Array<Category>()
-  public category: number = 0
+  category: number = 0
 
   constructor(
     private keyService: KeyService,
@@ -26,12 +27,12 @@ export class KeyUpdateComponent implements OnInit {
     private activeRoute: ActivatedRoute,
     protected alertService: AlertService) {
     activeRoute.params.subscribe(params => {
-      let id = params["id"];
+      const id = params["id"];
       if (id != null) {
-        this.keyService.getCategories().subscribe(data => {
-          this.categories = data!
+        this.keyService.getCategories().subscribe(categories => {
           this.keyService.readById(id).subscribe(key => {
             this.key = key!
+            this.categories = categories!
           });
         })
 
@@ -39,12 +40,12 @@ export class KeyUpdateComponent implements OnInit {
     })
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+  }
 
   save(): void {
     //if (JSON.stringify(this.key.parentId) == "") this.key.parentId = null
     //console.log(JSON.stringify(this.key.parentId))
-
     this.keyService.update(this.key).subscribe(() => {
       this.router.navigate(["/key"]);
       this.alertService.success('Sucesso: Categoria Atualizada!', this.options)
@@ -53,10 +54,5 @@ export class KeyUpdateComponent implements OnInit {
 
   cancel(): void {
     this.router.navigate(["/key"]);
-  }
-
-  onMainChange($event: any) {
-    this.category = Number($event.value)
-    //this.key.parentId = this.mainKey
   }
 }

@@ -5,7 +5,15 @@
     <form (ngSubmit)="save()" #categoryForm="ngForm">
         <div class="form-group">
             <label>Chave</label>
-            <input class="form-control" name="key" id="key" [(ngModel)]="key.key"  #name="ngModel"/>
+            <input class="form-control" name="key" id="key" [(ngModel)]="key.key" #name="ngModel" />
+        </div>
+        <div class="form-group">
+            <label>Categorias</label>
+            <select multiple="multiple" class="form-select" [(ngModel)]="key.categories" name="key.categories" id="key.categories" #name="ngModel">
+                <option *ngFor="let category of categories" value="{{category.id}}">
+                    {{category.name}}
+                </option>
+            </select>
         </div>
         <button type="submit" class="btn btn-primary m-1 btn-warning">
             Salvar
