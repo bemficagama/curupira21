@@ -1,8 +1,5 @@
-const { json } = require('body-parser')
-const queries = require('./queries')
-
 module.exports = app => {
-    const { existsOrError } = app.api.validation
+    const { existsOrError, notExistsOrError, equalsOrError } = app.api.validation
 
     const getAll = async (req, res) => {
         const page = req.query.page || 1
@@ -50,18 +47,6 @@ module.exports = app => {
 
         const categories = req.body.categories
 
-        const oldCategories = async () => {
-            return await app.db('key_has_categories')
-                .select('id')
-                .where('key_id', key.id)
-                .catch(err => res.status(500).send(err))
-        }
-
-        //const insCategories = categories.filter(x => !oldCategories.includes(x))
-        //const delCategories = oldCategories.filter(x => !categories.includes(x))
-
-        //insertKeyInCategories(insCategories)
-
         if (req.params.id) key.id = req.params.id
 
         try {
@@ -72,22 +57,46 @@ module.exports = app => {
 
         if (key.id) {
             app.db('keys')
-                .update(key)
+                .update({ id: key.id, key: key.key })
                 .where({ id: key.id })
-                .then(_ => res.status(204).send())
+                .then(key1 => {
+                    let rows = categories.map(category => {
+                        return { key_id: key.id, category_id: category }
+                    })
+                    if (categories.length > 0) {
+                        app.db('key_has_categories')
+                            .insert(rows)
+                            .onConflict('key_id', 'category_id')
+                            .ignore()
+                            .then(_ => {
+                                app.db('key_has_categories')
+                                    .andWhere('key_id', key.id)
+                                    .whereNotIn('category_id', categories)
+                                    .del()
+                                    .then(_ => res.status(204).send())
+                                    .catch(err => res.status(500).send(err))
+                            })
+                            .catch(err => res.status(500).send(err))
+                    } else {
+                        app.db('key_has_categories')
+                            .andWhere('key_id', key.id)
+                            .whereNotIn('category_id', categories)
+                            .del()
+                            .then(_ => res.status(204).send())
+                            .catch(err => res.status(500).send(err))
+                    }
+                })
                 .catch(err => res.status(500).send(err))
         } else {
             app.db('keys')
                 .insert({ id: key.id, key: key.key })
                 .then(id => {
                     if (categories) {
-                        rows = categories.map(category => {
+                        let rows = categories.map(category => {
                             return { key_id: id, category_id: category }
                         })
-                        console.log(rows.length)
-                        chunkSize = rows.length
                         app.db('key_has_categories')
-                            .batchInsert(rows, chunckSize)
+                            .insert(rows)
                             .catch(err => res.status(500).send(err))
                     }
                 })
@@ -98,18 +107,29 @@ module.exports = app => {
 
     const remove = async (req, res) => {
         try {
+
+            const id = req.params.id
+            existsOrError(req.params.id, 'Código da Chave não informado.')
+
+            /* const subcategory = await app.db('key_has_categories')
+                .where({ key_id: req.params.id })
+            notExistsOrError(subcategory, 'Chave possui categorias selecionadas.')
+
+            const category_urls = await app.db('url_has_categories')
+                .where({ category_id: req.params.id })
+            notExistsOrError(category_urls, 'Categoria possui URLs.') */
+
+            const category_keys = await app.db('key_has_categories')
+                .where({ key_id: id })
+            notExistsOrError(category_keys, 'Chave possui categorias selecionadas.')
+
             const rowsDeleted = await app.db('keys')
                 .where({ id: req.params.id }).del()
-
-            try {
-                existsOrError(rowsDeleted, 'Artigo não foi encontrado.')
-            } catch (msg) {
-                return res.status(400).send(msg)
-            }
+            existsOrError(rowsDeleted, 'Chave não foi encontrada.')
 
             res.status(204).send()
         } catch (msg) {
-            res.status(500).send(msg)
+            res.status(400).send(msg)
         }
     }
 
@@ -133,21 +153,5 @@ module.exports = app => {
             .catch(err => res.status(500).send(err))
     }
 
-    const getByCategory = async (req, res) => {
-        const categoryId = req.params.id
-        const page = req.query.page || 1
-        const categories = await app.db.raw(queries.categoryWithChildren, categoryId)
-        const ids = categories.rows.map(c => c.id)
-
-        app.db({ a: 'keys', u: 'users' })
-            .select('a.id', 'a.name', 'a.description', 'a.imageUrl', { author: 'u.name' })
-            .limit(limit).offset(page * limit - limit)
-            .whereRaw('?? = ??', ['u.id', 'a.userId'])
-            .whereIn('categoryId', ids)
-            .orderBy('a.id', 'desc')
-            .then(keys => res.json(keys))
-            .catch(err => res.status(500).send(err))
-    }
-
-    return { save, remove, getAll, getById, getByCategory, getCategories }
+    return { save, remove, getAll, getById, getCategories }
 }

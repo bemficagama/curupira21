@@ -18,7 +18,6 @@ export class UrlCreateComponent implements OnInit {
 
   url: Url = {}
   categories: Category[] = new Array<Category>()
-  public category: number = 0
 
   constructor(
     private urlService: UrlService,
@@ -38,16 +37,11 @@ export class UrlCreateComponent implements OnInit {
   save(): void {
     this.urlService.save(this.url).subscribe(() => {
       this.router.navigate(["/url"]);
-      this.alertService.success('Sucesso: Categoria Criada!', this.options)
+      this.alertService.success('Sucesso: Url Criada!', this.options)
     });
   }
 
   cancel(): void {
     this.router.navigate(["/url"]);
-  }
-
-  onMainChange($event: any) {
-    this.category = Number($event.value)
-    //this.url.parentId = this.mainCategory
   }
 }

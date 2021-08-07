@@ -1,4 +1,5 @@
 export interface Url {
     id?: number,
-    url?: string
+    url?: string,
+    categories?: string[]
 }

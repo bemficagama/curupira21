@@ -45,7 +45,7 @@ module.exports = app => {
         .put(app.api.key.save)
         .delete(app.api.key.remove)
 
-        app.route('/urls')
+    app.route('/urls')
         .all(app.config.passport.authenticate())
         .get(app.api.url.getAll)
         .post(app.api.url.save)

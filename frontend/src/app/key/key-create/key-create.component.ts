@@ -18,8 +18,6 @@ export class KeyCreateComponent implements OnInit {
 
   key: Key = {}
   categories: Category[] = new Array<Category>()
-  public mainCategory: number = 0
-
   constructor(
     private keyService: KeyService,
     private router: Router,
@@ -38,16 +36,11 @@ export class KeyCreateComponent implements OnInit {
   save(): void {
     this.keyService.save(this.key).subscribe(() => {
       this.router.navigate(["/key"]);
-      this.alertService.success('Sucesso: Categoria Criada!', this.options)
+      this.alertService.success('Sucesso: Chave Criada!', this.options)
     });
   }
 
   cancel(): void {
     this.router.navigate(["/key"]);
-  }
-
-  onMainChange($event: any) {
-    this.mainCategory = Number($event.value)
-    //this.key.parentId = this.mainCategory
   }
 }

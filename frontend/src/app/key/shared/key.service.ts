@@ -12,7 +12,7 @@ export class KeyService {
 
     constructor(
         private http: HttpClient
-    ) {}
+    ) { }
 
     getKeys(page: number = 1, size: number = 4, categoryId: number = 0, search: string = ''): Observable<KeyRequest | null> {
         return this.http.get<KeyRequest>(`${environment.api}/keys?page=${page}&size=${size}&categoryId=${categoryId}&search=${search}`)
@@ -39,7 +39,7 @@ export class KeyService {
             }));
     }
 
-    getCategories(): Observable<Category[]| null> {
+    getCategories(): Observable<Category[] | null> {
         return this.http.get<Category[]>(`${environment.api}/keys/categories`)
             .pipe(catchError((error: HttpErrorResponse) => {
                 let msg: string
@@ -117,7 +117,7 @@ export class KeyService {
                     // Erro retornando pelo backend
                     console.error(
                         `Código do erro ${error.status}, ` +
-                        `Erro: ${JSON.stringify(error.error)}`);
+                        `Erro: ${JSON.stringify(error.error)}`)
                 }
                 // retornar um observable com uma mensagem amigavel.
                 return throwError(`DELETE: ${JSON.stringify(error.error)}`);

@@ -4,7 +4,6 @@ import { KeyService } from "../shared/key.service";
 import { Component, OnInit } from "@angular/core";
 import { AlertService } from 'src/app/_alert';
 import { Category } from "src/app/category/shared/category";
-import { THIS_EXPR } from "@angular/compiler/src/output/output_ast";
 
 @Component({
   selector: "app-key-update",
@@ -19,7 +18,6 @@ export class KeyUpdateComponent implements OnInit {
 
   key: Key = {};
   categories: Category[] = new Array<Category>()
-  category: number = 0
 
   constructor(
     private keyService: KeyService,
