@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { AccountService } from '../shared/account.service';
+import { NgForm } from "@angular/forms";
 
 @Component({
   selector: 'app-login',
@@ -14,6 +15,8 @@ export class LoginComponent implements OnInit {
     password: ''
   }
 
+  public errorMessage: string = '';
+
   constructor(
     private accountService: AccountService,
     private router: Router
@@ -22,14 +25,15 @@ export class LoginComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  async onSubmit() {
-    try {
-      const result = await this.accountService.login(this.login)
-      console.log(`Login Efetuado: ${result}`)
-
-      this.router.navigate([''])
-    } catch (error) {
-      console.log(error)
-    }    
-  }
+  authenticate(form: NgForm) {
+    if (form.valid) {
+        this.accountService.login(this.login)
+            .subscribe(response => {
+              console.log(Object.keys(response).length)
+              this.router.navigate([''])
+            })
+    } else {
+        this.errorMessage = "Form Data Invalid";
+    }
+}
 }

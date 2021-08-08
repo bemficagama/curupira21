@@ -1,6 +1,6 @@
 <h2 class="text-center">Entrar</h2>
 
-<form (ngSubmit)="onSubmit()" #form="ngForm">
+<form novalidate #form="ngForm" (ngSubmit)="authenticate(form)">
     <div class="mb-3">
         <label>E-mail</label>
         <input class="form-control" type="email" name="email" id="email" [(ngModel)]="login.email" required />
