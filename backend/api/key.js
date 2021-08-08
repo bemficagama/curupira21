@@ -15,7 +15,7 @@ module.exports = app => {
             .andWhere(function () {
                 this.where('key', 'like', `%${search}%`)
             })
-            .count('id', { as: 'count' }).first()
+            .countDistinct('id', { as: 'count' }).first()
         const count = parseInt(result.count)
 
         app.db('keys').select('id', 'key')
