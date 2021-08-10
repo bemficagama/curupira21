@@ -23,6 +23,15 @@ class User extends Authenticatable implements JWTSubject
         'password',
     ];
 
+    public function rules()
+    {
+        return [
+            'name' => 'required',
+            'email' => ['required', 'email:rfc,dns'],
+            'password' => 'required',
+        ];
+    }
+
     /**
      * The attributes that should be hidden for arrays.
      *

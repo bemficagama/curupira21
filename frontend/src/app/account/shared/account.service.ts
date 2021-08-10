@@ -59,9 +59,30 @@ export class AccountService {
 
   }
 
-  async createAccount(account: any) {
-    const result = await this.http.post<any>(`${environment.api}/signup/`, account).toPromise()
-    return result
+  register(account: { name: string, email: string, password: string, confirmPassword: string }): Observable<boolean> {
+    return this.http.post<any>(`${environment.api}/register/`, account)
+      .pipe(catchError((error: HttpErrorResponse) => {
+        let msg: string
+        if (error.error instanceof ErrorEvent) {
+          // Erro de client-side ou de rede
+          msg = error.error.message
+          console.error('Ocorreu um erro:', error.error.message);
+        } if (error.status == 0) {
+          msg = "Sem comunicação com o servidor"
+          console.error(
+            `Código do erro ${error.status}, ` +
+            `Erro: ${msg}`);
+        } else {
+          // Erro retornando pelo backend
+          msg = JSON.stringify(error.error)
+          console.error(
+            `Código do erro ${error.status}, ` +
+            `Erro: ${JSON.stringify(error.error)}`);
+        }
+        // retornar um observable com uma mensagem amigavel.
+        return throwError(`REGISTRO: ${msg}`);
+      }))
+
   }
 
   getAuthorizationToken() {

@@ -29,7 +29,6 @@ export class LoginComponent implements OnInit {
     if (form.valid) {
         this.accountService.login(this.login)
             .subscribe(response => {
-              console.log(Object.keys(response).length)
               this.router.navigate([''])
             })
     } else {
