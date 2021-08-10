@@ -25,7 +25,7 @@ export class AccountService {
  */
 
   login(user: { email: string, password: string }): Observable<boolean> {
-    return this.http.post<any>(`${environment.api}/signin/`, { email: user.email, password: user.password })
+    return this.http.post<any>(`${environment.api}/login`, { email: user.email, password: user.password })
       .pipe(map(response => {
         if (response && response.token) {
           window.localStorage.setItem('token', response.token)

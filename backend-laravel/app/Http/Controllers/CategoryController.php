@@ -21,7 +21,7 @@ class CategoryController extends Controller
     public function index(Request $request)
     {
         $category = Category::get();
-        return response()->json($category, 200);
+        return response()->json(['data' => $category], 200);
     }
 
     /**

@@ -14,7 +14,7 @@ export class CategoryService {
     ) {}
 
     getCategories(page: number = 1, size: number = 4, parentId: number, search: string = ''): Observable<CategoryRequest | null> {
-        return this.http.get<CategoryRequest>(`${environment.api}/categories?page=${page}&size=${size}&parentId=${parentId}&search=${search}`)
+        return this.http.get<CategoryRequest>(`${environment.api}/v1/category?page=${page}&size=${size}&parentId=${parentId}&search=${search}`)
             .pipe(catchError((error: HttpErrorResponse) => {
                 let msg: string
                 if (error.error instanceof ErrorEvent) {
@@ -39,7 +39,7 @@ export class CategoryService {
     }
 
     getMains(): Observable<Category[]| null> {
-        return this.http.get<Category[]>(`${environment.api}/categories/mains`)
+        return this.http.get<Category[]>(`${environment.api}/v1/category-mains`)
             .pipe(catchError((error: HttpErrorResponse) => {
                 let msg: string
                 if (error.error instanceof ErrorEvent) {

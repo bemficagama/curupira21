@@ -19,6 +19,7 @@ Route::prefix('v1')->middleware('jwt.auth')->group(function () {
     Route::post('logout', 'App\Http\Controllers\AuthController@logout');
     Route::post('refresh', 'App\Http\Controllers\AuthController@refresh');
     Route::apiResource('category', 'App\Http\Controllers\CategoryController');
+    Route::apiResource('category-mains', 'App\Http\Controllers\CategoryController');
     //Route::apiResource('carro', 'App\Http\Controllers\CarroController');
     //Route::apiResource('locacao', 'App\Http\Controllers\LocacaoController');
     //Route::apiResource('marca', 'App\Http\Controllers\MarcaController');
