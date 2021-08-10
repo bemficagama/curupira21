@@ -1,0 +1,27 @@
+composer create-project laravel/laravel example-app
+
+cd example-app
+
+php artisan serve
+
+--
+
+php artisan breeze:install
+
+npm install
+npm run dev
+php artisan migrate
+
+/config/app.php -> timezone = "America/Manaus"
+
+--
+
+php artisan make:model Category
+
+php artisan make:migration create_categories_table --create=categories
+
+php artisan make:seed CategoriesSeed
+
+php artisan make:controller CategoriesController
+
+composer require tymon/jwt-auth
