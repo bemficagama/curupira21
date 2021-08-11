@@ -20,7 +20,8 @@
         <div class="col-md-5">
             <div class="form-group ">
                 <label>Pesquisa</label>
-                <input class="form-control" name="search" id="search" (keyup.enter)="onEnter()" (keyup.escape)="onEscape()" [(ngModel)]="search" />
+                <input class="form-control" name="search" id="search" (keyup.enter)="onEnter()"
+                    (keyup.escape)="onEscape()" [(ngModel)]="search" />
             </div>
         </div>
     </div>
@@ -35,12 +36,12 @@
                 </tr>
             </thead>
             <tbody>
-                <tr *ngIf="categories.length == 0">
+                <tr *ngIf="categories.data.length == 0">
                     <td colspan="4" class="text-center">
                         Lista de Categoria Vazia!
                     </td>
                 </tr>
-                <tr *ngFor="let category of categories; index as i">
+                <tr *ngFor="let category of categories.data; index as i">
                     <th scope="row">{{i+1}}</th>
                     <td>{{category.name}}</td>
                     <td>{{category.description}}</td>
@@ -67,12 +68,14 @@
                 </div>
                 <div class="col-md-2">
                     <ul class="pagination">
+                        <li class="page-item"><a class="page-link" [routerLink]="activatedRoute" [queryParams]="{page: 1}" >Primeira</a></li>
                         <li class="page-item"><a class="page-link" (click)="groupPrior()">Anterior</a></li>
                         <li *ngFor="let page of group" class="page-item" [class.active]="page == selectedPage"><a
                                 class="page-link" (click)="changePage(page)">{{page}}</a></li>
                         <li class="page-item"><a class="page-link" (click)="groupNext()">Próxima</a></li>
                     </ul>
                 </div>
+
             </div>
         </nav>
     </div>

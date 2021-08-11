@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Models\Category;
 use Illuminate\Http\Request;
-use App\Repositories\CategoryRepository;
 
 class CategoryController extends Controller
 {
@@ -20,8 +19,8 @@ class CategoryController extends Controller
      */
     public function index(Request $request)
     {
-        $category = Category::get();
-        return response()->json(['data' => $category], 200);
+        $category = Category::paginate($request->perPage)->withPath($request->path);
+        return response()->json($category, 200);
     }
 
     /**

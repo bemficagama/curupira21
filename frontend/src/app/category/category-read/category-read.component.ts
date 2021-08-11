@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-
 import { Category } from '../shared/category';
+import { CategoryRequest, Link} from '../shared/categoryRequest';
 import { CategoryService } from '../shared/category.service';
 import { AlertService } from 'src/app/_alert';
+import { Router, ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-category-read',
@@ -19,13 +20,17 @@ export class CategoryReadComponent implements OnInit {
 
   private locator = (c: Category, id: number) => c.id == id;
 
-  categories: Category[] = new Array<Category>()
+  categories: CategoryRequest = {data: new Array<Category>(), total: 0, per_page: 0,
+    current_page: 0, last_page: 0, first_page_url: '', last_page_url: '',
+    next_page_url: '', prev_page_url: '', path: '', from: 0, to: 0, 
+    links: new Array<Link>()
+  }
   mainCategories: Category[] = new Array<Category>()
   editCategory: Category | undefined; // the Entity currently being edited
   quantityPages: number = 0
   groupIndex: number = 0
   groups: number[][] = []
-  
+
 
   public quantityPerPage = 4;
   public selectedPage = 1;
@@ -36,8 +41,14 @@ export class CategoryReadComponent implements OnInit {
 
   constructor(
     private categoryService: CategoryService,
-    protected alertService: AlertService
-  ) {}
+    protected alertService: AlertService,
+    private activatedRoute: ActivatedRoute,
+    private router: Router
+  ) {
+    this.activatedRoute.queryParams.subscribe(params => {
+      this.selectedPage = params['page'];
+    })
+  }
 
   ngOnInit() {
     this.getCategory()
@@ -46,12 +57,13 @@ export class CategoryReadComponent implements OnInit {
 
   getCategory(): void {
     let count: number = 0;
-    this.categoryService.getCategories(this.selectedPage, this.quantityPerPage, this.mainCategory, this.search)
+    this.categoryService.getCategories(this.selectedPage, this.quantityPerPage, this.mainCategory, this.search, '' ) //window.location.href
       .subscribe(data => {
-        this.categories = data!.data
-        count = data!.count
+        this.categories = data!
+        count = data!.total
         this.quantityPages = Math.ceil(count / this.quantityPerPage)
         this.groups = this.separar(this.pages, 5)
+        console.log(data!.first_page_url)
       })
   }
 
@@ -62,9 +74,9 @@ export class CategoryReadComponent implements OnInit {
 
   delete(category: Category) {
     this.categoryService.deleteCategory(category.id!).subscribe(() => {
-      let index = this.categories.findIndex(c => this.locator(c, category.id!));
+      let index = this.categories.data.findIndex(c => this.locator(c, category.id!));
       if (index > -1) {
-        this.categories.splice(index, 1);
+        this.categories.data.splice(index, 1);
       }
       this.alertService.success('Sucesso: Categoria Excluída!', this.options)
     });
@@ -181,5 +193,9 @@ export class CategoryReadComponent implements OnInit {
     this.search = ''
     this.changePage(1)
     this.getCategory()
+  }
+
+  fistPage() {
+
   }
 }
