@@ -4,7 +4,7 @@ import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { Category } from './category';
-import { CategoryRequest } from './categoryRequest';
+import { CategoryRequest } from './category-request';
 
 @Injectable()
 export class CategoryService {
@@ -13,8 +13,8 @@ export class CategoryService {
         private http: HttpClient
     ) {}
 
-    getCategories(page: number = 1, size: number = 4, parentId: number, search: string = '', path: string): Observable<CategoryRequest | null> {
-        return this.http.get<CategoryRequest>(`${environment.api}/v1/category?page=${page}&perPage=${size}&parentId=${parentId}&search=${search}&path=${path}`)
+    getCategories(page: number = 1, per_page: number = 4, parentId: number = 0, search: string = '', path: string): Observable<CategoryRequest | null> {
+        return this.http.get<CategoryRequest>(`${environment.api}/v1/category?page=${page}&perPage=${per_page}&parentId=${parentId}&search=${search}&path=${path}`)
             .pipe(catchError((error: HttpErrorResponse) => {
                 let msg: string
                 if (error.error instanceof ErrorEvent) {
