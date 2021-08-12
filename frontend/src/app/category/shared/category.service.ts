@@ -13,7 +13,7 @@ export class CategoryService {
         private http: HttpClient
     ) {}
 
-    getCategories(page: number = 1, per_page: number = 4, parentId: number = 0, search: string = '', path: string): Observable<CategoryRequest | null> {
+    getCategories(page: number = 1, per_page: number = 4, parentId: number = 0, search: string = '', path: string): Observable<CategoryRequest> {
         return this.http.get<CategoryRequest>(`${environment.api}/v1/category?page=${page}&perPage=${per_page}&parentId=${parentId}&search=${search}&path=${path}`)
             .pipe(catchError((error: HttpErrorResponse) => {
                 let msg: string

@@ -59,11 +59,11 @@
     <nav aria-label="Page navigation example">
       <div class="row">
         <div class="col-md-2">
-          <select class="form-control" [(ngModel)]="perPage" #ctrl="ngModel" (change)="getCategory()">
-            <option value="3">3 por Página</option>
-            <option value="4">4 por Página</option>
-            <option value="6">6 por Página</option>
-            <option value="8">8 por Página</option>
+          <select class="form-control" [(ngModel)]="pagination.per_page" #ctrl="ngModel" (change)="getCategory()">
+            <option value=3>3 por Página</option>
+            <option value=4>4 por Página</option>
+            <option value=6>6 por Página</option>
+            <option value=8>8 por Página</option>
           </select>
         </div>
         <!-- <div class="col-md-2">
@@ -74,7 +74,7 @@
           </ul>
         </div> -->
         <div class="col-md-2 col-4">
-          <ngb-pagination [collectionSize]="total" [pageSize]="perPage" [(page)]="page" [boundaryLinks]="true"
+          <ngb-pagination [collectionSize]="pagination.total" [pageSize]="pagination.per_page" [(page)]="pagination.current_page" [boundaryLinks]="true"
             (pageChange)=getCategory() [maxSize]="6" ></ngb-pagination>
         </div>
       </div>

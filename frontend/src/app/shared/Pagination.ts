@@ -1,8 +1,6 @@
-import { Category } from "./category";
-import { Link } from "src/app/shared/Link";
+import { Link } from "./Link";
 
-export interface CategoryRequest {
-  data: Category[]
+export interface Pagination {
   total: number
   per_page: number
   current_page: number
