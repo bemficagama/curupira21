@@ -3,7 +3,7 @@ import { Category } from '../shared/category';
 import { CategoryService } from '../shared/category.service';
 import { AlertService } from 'src/app/_alert';
 import { Router, ActivatedRoute } from '@angular/router';
-import { Link } from '../shared/category-request';
+import { Link, Parameter } from '../shared/category-request'
 
 @Component({
   selector: 'app-category-read',
@@ -30,6 +30,8 @@ export class CategoryReadComponent implements OnInit {
   perPage: number = 4
   links: Link[] = new Array<Link>()
   from: number = 0
+  total: number = 1
+
 
   public firstPage = 1;
   public lastPage = 1;
@@ -42,10 +44,6 @@ export class CategoryReadComponent implements OnInit {
     private activatedRoute: ActivatedRoute,
     private router: Router
   ) {
-    this.activatedRoute.queryParams.subscribe(params => {
-      this.page = params['page']
-      this.perPage = params['perPage']
-    })
 
     this.categoryService.getCategories(this.page, this.perPage, this.mainCategory, this.search, '') //window.location.href
       .subscribe(data => {
@@ -54,6 +52,7 @@ export class CategoryReadComponent implements OnInit {
         this.perPage = data!.per_page
         this.links = data!.links
         this.from = data!.from
+        this.total = data!.total
         //count = data!.total
         //this.quantityPages = Math.ceil(count / this.quantityPerPage)
         //this.groups = this.separar(this.pages, 5)
@@ -72,11 +71,14 @@ export class CategoryReadComponent implements OnInit {
     let count: number = 0;
     this.categoryService.getCategories(this.page, this.perPage, this.mainCategory, this.search, '') //window.location.href
       .subscribe(data => {
+
         this.categories = data!.data
         this.page = data!.current_page
         this.perPage = data!.per_page
         this.links = data!.links
         this.from = data!.from
+        this.total = data!.total
+
         //count = data!.total
         //this.quantityPages = Math.ceil(count / this.quantityPerPage)
         //this.groups = this.separar(this.pages, 5)
@@ -138,7 +140,7 @@ export class CategoryReadComponent implements OnInit {
   changePage(link: Link) {
     if (Number(link.label)) {
       this.page = Number(link.label)
-    } else if (link.label == '...'){
+    } else if (link.label == '...') {
       this.page = this.from
     }
     this.getCategory()

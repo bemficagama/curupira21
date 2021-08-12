@@ -6,6 +6,11 @@ export interface Link {
   active: boolean
 }
 
+export interface Parameter {
+  page: number
+  perPage: number
+}
+
 export interface CategoryRequest {
   data: Category[]
   total: number

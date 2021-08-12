@@ -73,14 +73,10 @@
             <li class="page-item"><a class="page-link" (click)="groupNext()">Próxima</a></li>
           </ul>
         </div> -->
-        <div class="col-md-4">
-          <ul class="pagination">
-            <li *ngFor="let link of links" class="page-item" [class.active]="link.active">
-              <a class="page-link" (click)="changePage(link)" [innerHtml]="link.label" ></a>
-            </li>
-          </ul>
+        <div class="col-md-2 col-4">
+          <ngb-pagination [collectionSize]="total" [pageSize]="perPage" [(page)]="page" [boundaryLinks]="true"
+            (pageChange)=getCategory() [maxSize]="6" ></ngb-pagination>
         </div>
-
       </div>
     </nav>
   </div>

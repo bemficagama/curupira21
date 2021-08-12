@@ -23,6 +23,7 @@ import { httpInterceptorProviders } from "./http-interceptors";
 import { AlertModule } from './_alert';
 import { NotFoundComponent } from './shared/not-found/not-found.component';
 import { MessageErrorHandler } from './errorHandler';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 @NgModule({
   declarations: [
@@ -37,7 +38,7 @@ import { MessageErrorHandler } from './errorHandler';
     ReactiveFormsModule,
     HttpClientModule, 
     AppRoutingModule, AlertModule, 
-    CategoryModule, KeyModule, UrlModule
+    CategoryModule, KeyModule, UrlModule, NgbModule
   ],
   providers: [MessageService, httpInterceptorProviders, { provide: ErrorHandler, useClass: MessageErrorHandler }],
   bootstrap: [AppComponent]
