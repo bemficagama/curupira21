@@ -19,7 +19,18 @@ class CategoryController extends Controller
      */
     public function index(Request $request)
     {
-        $category = Category::paginate($request->perPage)->withPath($request->path);
+        $category = Category::where('name', 'like', '%' . $request->search . '%')
+            ->where(function ($query) use ($request) {
+                $query->where('parent_id', '=', $request->parentId)
+                    ->orWhereRaw(($request->parentId == 0 ? 'true' : 'false'));
+            })
+            ->paginate($request->perPage)->withPath($request->path);
+        return response()->json($category, 200);
+    }
+
+    public function mains(Request $request)
+    {
+        $category = Category::whereNull('parent_id')->get();
         return response()->json($category, 200);
     }
 

@@ -9,7 +9,7 @@
     <div class="col-md-5">
       <div class="form-group ">
         <label>Categoria Principal</label>
-        <select class="form-control" (change)="onMainChange()" [(ngModel)]="mainCategory">
+        <select class="form-control" (change)="getCategory()" [(ngModel)]="mainCategory">
           <option value=0>Nenhuma Selecionada</option>
           <option *ngFor="let main of mainCategories" value="{{main.id}}">
             {{main.name}}

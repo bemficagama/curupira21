@@ -36,7 +36,7 @@ export class CategoryReadComponent implements OnInit {
     to: 0,
     links: new Array<Link>()
   }
-  
+
   public mainCategory = 0
   public search: string = ''
 
@@ -48,19 +48,13 @@ export class CategoryReadComponent implements OnInit {
     this.categoryService.getCategories(this.pagination.current_page | 1, this.pagination.per_page | 4, this.mainCategory, this.search, '') //window.location.href
       .subscribe(data => {
         this.categories = data!.data
-        /* this.page = data!.current_page
-        this.perPage = data!.per_page
-        this.links = data!.links
-        this.from = data!.from
-        this.total = data!.total */
-        this.pagination = {total: data.total, per_page: data.per_page, current_page: data.current_page, 
+        this.pagination = {total: data.total, per_page: data.per_page, current_page: data.current_page,
           last_page: data.last_page, first_page_url: data.first_page_url, last_page_url: data.last_page_url,
           next_page_url: data.next_page_url, prev_page_url:data.prev_page_url, path: data.path, from:data.from,
           to: data.to, links: data.links}
-        //count = data!.total
-        //this.quantityPages = Math.ceil(count / this.quantityPerPage)
-        //this.groups = this.separar(this.pages, 5)
       })
+
+      this.getMains()
   }
 
   ngOnInit() {
@@ -72,20 +66,10 @@ export class CategoryReadComponent implements OnInit {
       .subscribe(data => {
 
         this.categories = data!.data
-        /* this.page = data!.current_page
-        this.perPage = data!.per_page
-        this.links = data!.links
-        this.from = data!.from
-        this.total = data!.total */
-        this.pagination = {total: data.total, per_page: data.per_page, current_page: data.current_page, 
+        this.pagination = {total: data.total, per_page: data.per_page, current_page: data.current_page,
         last_page: data.last_page, first_page_url: data.first_page_url, last_page_url: data.last_page_url,
         next_page_url: data.next_page_url, prev_page_url:data.prev_page_url, path: data.path, from:data.from,
         to: data.to, links: data.links}
-        console.log(this.pagination.per_page)
-        //count = data!.total
-        //this.quantityPages = Math.ceil(count / this.quantityPerPage)
-        //this.groups = this.separar(this.pages, 5)
-
       })
   }
 
@@ -102,11 +86,6 @@ export class CategoryReadComponent implements OnInit {
       }
       this.alertService.success('Sucesso: Categoria Excluída!', this.options)
     }); */
-  }
-
-  onMainChange() {
-    //this.groupIndex = 0
-    //this.changePage(1);
   }
 
   onEnter() {
