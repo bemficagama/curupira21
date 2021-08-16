@@ -48,13 +48,15 @@ export class CategoryReadComponent implements OnInit {
     this.categoryService.getCategories(this.pagination.current_page | 1, this.pagination.per_page | 4, this.mainCategory, this.search, '') //window.location.href
       .subscribe(data => {
         this.categories = data!.data
-        this.pagination = {total: data.total, per_page: data.per_page, current_page: data.current_page,
+        this.pagination = {
+          total: data.total, per_page: data.per_page, current_page: data.current_page,
           last_page: data.last_page, first_page_url: data.first_page_url, last_page_url: data.last_page_url,
-          next_page_url: data.next_page_url, prev_page_url:data.prev_page_url, path: data.path, from:data.from,
-          to: data.to, links: data.links}
+          next_page_url: data.next_page_url, prev_page_url: data.prev_page_url, path: data.path, from: data.from,
+          to: data.to, links: data.links
+        }
       })
 
-      this.getMains()
+    this.getMains()
   }
 
   ngOnInit() {
@@ -66,10 +68,12 @@ export class CategoryReadComponent implements OnInit {
       .subscribe(data => {
 
         this.categories = data!.data
-        this.pagination = {total: data.total, per_page: data.per_page, current_page: data.current_page,
-        last_page: data.last_page, first_page_url: data.first_page_url, last_page_url: data.last_page_url,
-        next_page_url: data.next_page_url, prev_page_url:data.prev_page_url, path: data.path, from:data.from,
-        to: data.to, links: data.links}
+        this.pagination = {
+          total: data.total, per_page: data.per_page, current_page: data.current_page,
+          last_page: data.last_page, first_page_url: data.first_page_url, last_page_url: data.last_page_url,
+          next_page_url: data.next_page_url, prev_page_url: data.prev_page_url, path: data.path, from: data.from,
+          to: data.to, links: data.links
+        }
       })
   }
 
@@ -79,13 +83,15 @@ export class CategoryReadComponent implements OnInit {
   }
 
   delete(category: Category) {
-    /* this.categoryService.deleteCategory(category.id!).subscribe(() => {
-      let index = this.categories.data.findIndex(c => this.locator(c, category.id!));
-      if (index > -1) {
-        this.categories.data.splice(index, 1);
-      }
-      this.alertService.success('Sucesso: Categoria Excluída!', this.options)
-    }); */
+    if (confirm("Confirma a deleção do registro? " + category.name)) {
+      this.categoryService.deleteCategory(category.id!).subscribe(() => {
+        let index = this.categories.findIndex(c => this.locator(c, category.id!));
+        if (index > -1) {
+          this.categories.splice(index, 1);
+        }
+        this.alertService.success('Sucesso: Categoria Excluída!', this.options)
+      })
+    }
   }
 
   onEnter() {

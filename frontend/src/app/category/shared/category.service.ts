@@ -76,13 +76,13 @@ export class CategoryService {
   }
 
   readById(id: number) {
-    return this.http.get<Category>(`${environment.api}/categories/${id}`)
+    return this.http.get<Category>(`${environment.api}/v1/category/${id}`)
     //.pipe(catchError(this.handleError('category.getById', null)))
 
   }
 
   update(category: Category): Observable<Category> {
-    return this.http.put<Category>(`${environment.api}/categories/${category.id}`, category)
+    return this.http.put<Category>(`${environment.api}/v1/category/${category.id}`, category)
       .pipe(catchError((error: HttpErrorResponse) => {
 
         if (error.error instanceof ErrorEvent) {
@@ -100,7 +100,7 @@ export class CategoryService {
   }
 
   save(category: Category): Observable<Category> {
-    return this.http.post<Category>(`${environment.api}/categories`, category)
+    return this.http.post<Category>(`${environment.api}/v1/category`, category)
       .pipe(catchError((error: HttpErrorResponse) => {
 
         if (error.error instanceof ErrorEvent) {
@@ -118,7 +118,7 @@ export class CategoryService {
   }
 
   deleteCategory(id: number): Observable<unknown> {
-    return this.http.delete(`${environment.api}/categories/${id}`)
+    return this.http.delete(`${environment.api}/v1/category/${id}`)
       .pipe(catchError((error: HttpErrorResponse) => {
 
         if (error.error instanceof ErrorEvent) {
