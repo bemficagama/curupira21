@@ -4,125 +4,137 @@ import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { Key } from './key';
-import { KeyRequest } from './keyRequest';
 import { Category } from 'src/app/category/shared/category';
+import { KeyRequest } from './key-request';
+import { AccountService } from 'src/app/account/shared/account.service';
+import { Router } from '@angular/router';
 
 @Injectable()
 export class KeyService {
 
-    constructor(
-        private http: HttpClient
-    ) { }
+  constructor(
+    private http: HttpClient,
+    private accountService: AccountService,
+    private router: Router
+  ) { }
 
-    getKeys(page: number = 1, size: number = 4, categoryId: number = 0, search: string = ''): Observable<KeyRequest | null> {
-        return this.http.get<KeyRequest>(`${environment.api}/keys?page=${page}&size=${size}&categoryId=${categoryId}&search=${search}`)
-            .pipe(catchError((error: HttpErrorResponse) => {
-                let msg: string
-                if (error.error instanceof ErrorEvent) {
-                    // Erro de client-side ou de rede
-                    msg = error.error.message
-                    console.error('Ocorreu um erro:', error.error.message);
-                } if (error.status == 0) {
-                    msg = "Sem comunicação com o servidor"
-                    console.error(
-                        `Código do erro ${error.status}, ` +
-                        `Erro: ${msg}`);
-                } else {
-                    // Erro retornando pelo backend
-                    msg = JSON.stringify(error.error.status)
-                    console.error(
-                        `Código do erro ${error.status}, ` +
-                        `Erro: ${JSON.stringify(error.error)}`);
-                }
-                // retornar um observable com uma mensagem amigavel.
-                return throwError(`CARREGAR: ${msg}`);
-            }));
-    }
+  getAll(page: number = 1, per_page: number = 4, parent_id: number = 0, search: string = '', path: string): Observable<KeyRequest> {
+    return this.http.get<KeyRequest>(`${environment.api}/v1/key?page=${page}&perPage=${per_page}&parent_id=${parent_id}&search=${search}&path=${path}`)
+      .pipe(catchError((error: HttpErrorResponse) => {
+        if (error.status === 401) {
+          this.accountService.clear();
+          this.router.navigateByUrl("/login");
+          return throwError(`TOKEN: Token Inválido`);
+        }
+        let msg: string
+        if (error.error instanceof ErrorEvent) {
+          // Erro de client-side ou de rede
+          msg = error.error.message
+          console.error('Ocorreu um erro:', error.error.message);
+        } if (error.status == 0) {
+          msg = "Sem comunicação com o servidor"
+          console.error(
+            `Código do erro ${error.status}, ` +
+            `Erro: ${msg}`);
+        } else {
+          // Erro retornando pelo backend
+          msg = JSON.stringify(error.error.status)
+          console.error(
+            `Código do erro ${error.status}, ` +
+            `Erro: ${JSON.stringify(error.error)}`);
+        }
+        // retornar um observable com uma mensagem amigavel.
+        return throwError(`CARREGAR: ${msg}`);
+      }));
+  }
 
-    getCategories(): Observable<Category[] | null> {
-        return this.http.get<Category[]>(`${environment.api}/keys/categories`)
-            .pipe(catchError((error: HttpErrorResponse) => {
-                let msg: string
-                if (error.error instanceof ErrorEvent) {
-                    // Erro de client-side ou de rede
-                    msg = error.error.message
-                    console.error('Ocorreu um erro:', error.error.message);
-                } if (error.status == 0) {
-                    msg = "Sem comunicação com o servidor"
-                    console.error(
-                        `Código do erro ${error.status}, ` +
-                        `Erro: ${msg}`);
-                } else {
-                    // Erro retornando pelo backend
-                    msg = JSON.stringify(error.error.status)
-                    console.error(
-                        `Código do erro ${error.status}, ` +
-                        `Erro: ${JSON.stringify(error.error)}`);
-                }
-                // retornar um observable com uma mensagem amigavel.
-                return throwError(`CARREGAR CATEGORIAS: ${msg}`);
-            }));
-    }
+  getMains(): Observable<Category[] | null> {
+    return this.http.get<Category[]>(`${environment.api}/v1/category-mains`)
+      .pipe(catchError((error: HttpErrorResponse) => {
+        if (error.status === 401) {
+          this.accountService.clear;
+        }
+        let msg: string
+        if (error.error instanceof ErrorEvent) {
+          // Erro de client-side ou de rede
+          msg = error.error.message
+          console.error('Ocorreu um erro:', error.error.message);
+        } if (error.status == 0) {
+          msg = "Sem comunicação com o servidor"
+          console.error(
+            `Código do erro ${error.status}, ` +
+            `Erro: ${msg}`);
+        } else {
+          // Erro retornando pelo backend
+          msg = JSON.stringify(error.error.status)
+          console.error(
+            `Código do erro ${error.status}, ` +
+            `Erro: ${JSON.stringify(error.error)}`);
+        }
+        // retornar um observable com uma mensagem amigavel.
+        return throwError(`CARREGAR: ${msg}`);
+      }));
+  }
 
-    readById(id: number) {
-        return this.http.get<Key>(`${environment.api}/keys/${id}`)
-        //.pipe(catchError(this.handleError('category.getById', null)))
+  readById(id: number) {
+    return this.http.get<Key>(`${environment.api}/v1/key/${id}`)
+    //.pipe(catchError(this.handleError('key.getById', null)))
 
-    }
+  }
 
-    update(category: Key): Observable<Key> {
-        return this.http.put<Key>(`${environment.api}/keys/${category.id}`, category)
-            .pipe(catchError((error: HttpErrorResponse) => {
+  update(key: Key): Observable<Key> {
+    return this.http.put<Key>(`${environment.api}/v1/key/${key.id}`, key)
+      .pipe(catchError((error: HttpErrorResponse) => {
 
-                if (error.error instanceof ErrorEvent) {
-                    // Erro de client-side ou de rede
-                    console.error('Ocorreu um erro:', error.error.message);
-                } else {
-                    // Erro retornando pelo backend
-                    console.error(
-                        `Código do erro ${error.status}, ` +
-                        `Erro: ${JSON.stringify(error.error)}`);
-                }
-                // retornar um observable com uma mensagem amigavel.
-                return throwError(`ATUALIZAR: ${JSON.stringify(error.error)}`);
-            }));
-    }
+        if (error.error instanceof ErrorEvent) {
+          // Erro de client-side ou de rede
+          console.error('Ocorreu um erro:', error.error.message);
+        } else {
+          // Erro retornando pelo backend
+          console.error(
+            `Código do erro ${error.status}, ` +
+            `Erro: ${JSON.stringify(error.error)}`);
+        }
+        // retornar um observable com uma mensagem amigavel.
+        return throwError(`ATUALIZAR: ${JSON.stringify(error.error)}`);
+      }));
+  }
 
-    save(category: Key): Observable<Key> {
-        return this.http.post<Key>(`${environment.api}/keys`, category)
-            .pipe(catchError((error: HttpErrorResponse) => {
+  save(key: Key): Observable<Key> {
+    return this.http.post<Key>(`${environment.api}/v1/key`, key)
+      .pipe(catchError((error: HttpErrorResponse) => {
 
-                if (error.error instanceof ErrorEvent) {
-                    // Erro de client-side ou de rede
-                    console.error('Ocorreu um erro:', error.error.message);
-                } else {
-                    // Erro retornando pelo backend
-                    console.error(
-                        `Código do erro ${error.status}, ` +
-                        `Erro: ${JSON.stringify(error.error)}`);
-                }
-                // retornar um observable com uma mensagem amigavel.
-                return throwError(`SALVAR: ${JSON.stringify(error.error)}`);
-            }));
-    }
+        if (error.error instanceof ErrorEvent) {
+          // Erro de client-side ou de rede
+          console.error('Ocorreu um erro:', error.error.message);
+        } else {
+          // Erro retornando pelo backend
+          console.error(
+            `Código do erro ${error.status}, ` +
+            `Erro: ${JSON.stringify(error.error)}`);
+        }
+        // retornar um observable com uma mensagem amigavel.
+        return throwError(`SALVAR: ${JSON.stringify(error.error)}`);
+      }));
+  }
 
-    deleteKey(id: number): Observable<unknown> {
-        return this.http.delete(`${environment.api}/keys/${id}`)
-            .pipe(catchError((error: HttpErrorResponse) => {
+  deleteKey(id: number): Observable<unknown> {
+    return this.http.delete(`${environment.api}/v1/key/${id}`)
+      .pipe(catchError((error: HttpErrorResponse) => {
 
-                if (error.error instanceof ErrorEvent) {
-                    // Erro de client-side ou de rede
-                    console.error('Ocorreu um erro:', error.error.message);
-                } else {
-                    // Erro retornando pelo backend
-                    console.error(
-                        `Código do erro ${error.status}, ` +
-                        `Erro: ${JSON.stringify(error.error)}`)
-                }
-                // retornar um observable com uma mensagem amigavel.
-                return throwError(`DELETE: ${JSON.stringify(error.error)}`);
-                `Network Error: ${error.statusText} (${error.status})`
-                throwError(`DELETE: ${error.statusText} ${JSON.stringify(error.error)} (Código do Erro: ${error.status})`)
-            }));
-    }
+        if (error.error instanceof ErrorEvent) {
+          // Erro de client-side ou de rede
+          console.error('Ocorreu um erro:', error.error.message);
+        } else {
+          // Erro retornando pelo backend
+          console.error(
+            `Código do erro ${error.status}, ` +
+            `Erro: ${JSON.stringify(error.error)}`);
+        }
+        // retornar um observable com uma mensagem amigavel.
+        return throwError(`DELETE: ${JSON.stringify(error.error)}`);
+        `Network Error: ${error.statusText} (${error.status})`
+        throwError(`DELETE: ${error.statusText} ${JSON.stringify(error.error)} (Código do Erro: ${error.status})`)
+      }));
+  }
 }

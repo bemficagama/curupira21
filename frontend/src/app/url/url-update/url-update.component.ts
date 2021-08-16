@@ -41,9 +41,6 @@ export class UrlUpdateComponent implements OnInit {
   ngOnInit(): void { }
 
   save(): void {
-    //if (JSON.stringify(this.url.parentId) == "") this.url.parentId = null
-    //console.log(JSON.stringify(this.url.parentId))
-
     this.urlService.update(this.url).subscribe(() => {
       this.router.navigate(["/url"]);
       this.alertService.success('Sucesso: Categoria Atualizada!', this.options)

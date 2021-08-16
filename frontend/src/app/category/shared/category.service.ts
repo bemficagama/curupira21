@@ -17,8 +17,8 @@ export class CategoryService {
     private router: Router
   ) { }
 
-  getCategories(page: number = 1, per_page: number = 4, parentId: number = 0, search: string = '', path: string): Observable<CategoryRequest> {
-    return this.http.get<CategoryRequest>(`${environment.api}/v1/category?page=${page}&perPage=${per_page}&parentId=${parentId}&search=${search}&path=${path}`)
+  getCategories(page: number = 1, per_page: number = 4, parent_id: number = 0, search: string = '', path: string): Observable<CategoryRequest> {
+    return this.http.get<CategoryRequest>(`${environment.api}/v1/category?page=${page}&perPage=${per_page}&parent_id=${parent_id}&search=${search}&path=${path}`)
       .pipe(catchError((error: HttpErrorResponse) => {
         if (error.status === 401) {
           this.accountService.clear();

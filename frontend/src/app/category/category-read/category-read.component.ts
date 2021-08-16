@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { Category } from '../shared/category';
 import { CategoryService } from '../shared/category.service';
 import { AlertService } from 'src/app/_alert';
-import { Link } from 'src/app/shared/Link';
 import { Pagination } from 'src/app/shared/Pagination';
 
 @Component({
@@ -22,21 +21,7 @@ export class CategoryReadComponent implements OnInit {
 
   categories: Category[] = new Array<Category>()
   mainCategories: Category[] = new Array<Category>()
-  pagination: Pagination = {
-    total: 0,
-    per_page: 4,
-    current_page: 1,
-    last_page: 0,
-    first_page_url: '',
-    last_page_url: '',
-    next_page_url: '',
-    prev_page_url: '',
-    path: '',
-    from: 0,
-    to: 0,
-    links: new Array<Link>()
-  }
-
+  pagination: Pagination = new Pagination()
   public mainCategory = 0
   public search: string = ''
 
@@ -95,13 +80,11 @@ export class CategoryReadComponent implements OnInit {
   }
 
   onEnter() {
-    //this.changePage(1)
     this.getCategory()
   }
 
   onEscape() {
     this.search = ''
-    //this.changePage(1)
     this.getCategory()
   }
 }

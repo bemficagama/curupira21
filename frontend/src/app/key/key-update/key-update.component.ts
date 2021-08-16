@@ -1,9 +1,9 @@
+import { Category } from "../../category/shared/category";
 import { Key } from "../shared/key";
 import { Router, ActivatedRoute } from "@angular/router";
 import { KeyService } from "../shared/key.service";
 import { Component, OnInit } from "@angular/core";
 import { AlertService } from 'src/app/_alert';
-import { Category } from "src/app/category/shared/category";
 
 @Component({
   selector: "app-key-update",
@@ -17,20 +17,22 @@ export class KeyUpdateComponent implements OnInit {
   };
 
   key: Key = {};
-  categories: Category[] = new Array<Category>()
+  mainCategories: Category[] = new Array<Category>()
+  public mainCategory: number = 0
 
   constructor(
-    private keyService: KeyService,
+    private KeyService: KeyService,
     private router: Router,
     private activeRoute: ActivatedRoute,
     protected alertService: AlertService) {
     activeRoute.params.subscribe(params => {
-      const id = params["id"];
+      let id = params["id"];
       if (id != null) {
-        this.keyService.getCategories().subscribe(categories => {
-          this.keyService.readById(id).subscribe(key => {
+        this.KeyService.getMains().subscribe(data => {
+          this.mainCategories = data!
+          this.KeyService.readById(id).subscribe(key => {
             this.key = key!
-            this.categories = categories!
+            //this.mainCategory = Number(key.parent_id)
           });
         })
 
@@ -38,13 +40,13 @@ export class KeyUpdateComponent implements OnInit {
     })
   }
 
-  ngOnInit(): void {
-  }
+  ngOnInit(): void { }
 
   save(): void {
-    //if (JSON.stringify(this.key.parentId) == "") this.key.parentId = null
-    //console.log(JSON.stringify(this.key.parentId))
-    this.keyService.update(this.key).subscribe(() => {
+    //if (JSON.stringify(this.key.parent_id) == "") this.key.parent_id = null
+    //console.log(JSON.stringify(this.key.parent_id))
+
+    this.KeyService.update(this.key).subscribe(() => {
       this.router.navigate(["/key"]);
       this.alertService.success('Sucesso: Categoria Atualizada!', this.options)
     });
@@ -52,5 +54,10 @@ export class KeyUpdateComponent implements OnInit {
 
   cancel(): void {
     this.router.navigate(["/key"]);
+  }
+
+  onMainChange($event: any) {
+    this.mainCategory = Number($event.value)
+    //this.key.parent_id = this.mainCategory
   }
 }

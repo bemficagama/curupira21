@@ -47,6 +47,6 @@ export class CategoryCreateComponent implements OnInit {
 
   onMainChange($event: any) {
     this.mainCategory = Number($event.value)
-    this.category.parentId = this.mainCategory
+    this.category.parent_id = this.mainCategory
   }
 }

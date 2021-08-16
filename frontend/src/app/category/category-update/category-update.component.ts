@@ -31,7 +31,7 @@ export class CategoryUpdateComponent implements OnInit {
           this.mainCategories = data!
           this.categoryService.readById(id).subscribe(category => {
             this.category = category!
-            this.mainCategory = Number(category.parentId)
+            this.mainCategory = Number(category.parent_id)
           });
         })
 
@@ -42,8 +42,8 @@ export class CategoryUpdateComponent implements OnInit {
   ngOnInit(): void { }
 
   save(): void {
-    if (JSON.stringify(this.category.parentId) == "") this.category.parentId = null
-    console.log(JSON.stringify(this.category.parentId))
+    if (JSON.stringify(this.category.parent_id) == "") this.category.parent_id = null
+    console.log(JSON.stringify(this.category.parent_id))
 
     this.categoryService.update(this.category).subscribe(() => {
       this.router.navigate(["/category"]);
@@ -57,6 +57,6 @@ export class CategoryUpdateComponent implements OnInit {
 
   onMainChange($event: any) {
     this.mainCategory = Number($event.value)
-    this.category.parentId = this.mainCategory
+    this.category.parent_id = this.mainCategory
   }
 }

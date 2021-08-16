@@ -21,8 +21,8 @@ class CategoryController extends Controller
     {
         $category = Category::where('name', 'like', '%' . $request->search . '%')
             ->where(function ($query) use ($request) {
-                $query->where('parent_id', '=', $request->parentId)
-                    ->orWhereRaw(($request->parentId == 0 ? 'true' : 'false'));
+                $query->where('parent_id', '=', $request->parent_id)
+                    ->orWhereRaw(($request->parent_id == 0 ? 'true' : 'false'));
             })
             ->paginate($request->perPage)->withPath($request->path);
         return response()->json($category, 200);

@@ -2,5 +2,5 @@ export interface Category {
     id?: number,
     name?: string,
     description?: string,
-    parentId?: number | null
+    parent_id?: number | null
 }
