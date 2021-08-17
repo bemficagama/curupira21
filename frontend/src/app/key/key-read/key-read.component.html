@@ -44,7 +44,6 @@
         <tr *ngFor="let key of keys; index as i">
           <th scope="row">{{i+1}}</th>
           <td>{{key.key}}</td>
-          <td>{{key.description}}</td>
           <td class="text-center">
             <a routerLink="/key/key-update/{{key.id}}"><i class="fas fa-edit edit"></i></a>
             <a (click)="delete(key)"><i class="fas fa-trash delete"></i></a>
