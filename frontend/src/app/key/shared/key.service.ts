@@ -76,6 +76,34 @@ export class KeyService {
       }));
   }
 
+  getCategories(): Observable<Category[] | null> {
+    return this.http.get<Category[]>(`${environment.api}/v1/key/categories`)
+      .pipe(catchError((error: HttpErrorResponse) => {
+        if (error.status === 401) {
+          this.accountService.clear;
+        }
+        let msg: string
+        if (error.error instanceof ErrorEvent) {
+          // Erro de client-side ou de rede
+          msg = error.error.message
+          console.error('Ocorreu um erro:', error.error.message);
+        } if (error.status == 0) {
+          msg = "Sem comunicação com o servidor"
+          console.error(
+            `Código do erro ${error.status}, ` +
+            `Erro: ${msg}`);
+        } else {
+          // Erro retornando pelo backend
+          msg = JSON.stringify(error.error.status)
+          console.error(
+            `Código do erro ${error.status}, ` +
+            `Erro: ${JSON.stringify(error.error)}`);
+        }
+        // retornar um observable com uma mensagem amigavel.
+        return throwError(`CARREGAR: ${msg}`);
+      }));
+  }
+
   readById(id: number) {
     return this.http.get<Key>(`${environment.api}/v1/key/${id}`)
     //.pipe(catchError(this.handleError('key.getById', null)))

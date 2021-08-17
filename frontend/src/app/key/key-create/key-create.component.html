@@ -1,19 +1,17 @@
-<div class="container app-key-update">
+<div class="container app-category-update">
     <div class="bg-primary p-2 text-white bg-warning text-dark">
-        <h5>Criar Chave</h5>
+        <h5>Criar Categoria</h5>
     </div>
-    <form (ngSubmit)="save()" #keyForm="ngForm">
+    <form (ngSubmit)="save()" #categoryForm="ngForm">
         <div class="form-group">
-            <label>Nome</label>
-            <input class="form-control" name="name" id="name" [(ngModel)]="key.key" #name="ngModel" />
+            <label>Chave</label>
+            <input class="form-control" name="key" id="key" [(ngModel)]="key.key" #name="ngModel" />
         </div>
-
         <div class="form-group">
-            <label>Chave Principal</label>
-            <select class="form-control" (change)="onMainChange($event.target)" [value]="mainCategory">
-                <option value=0>Nenhuma Selecionada</option>
-                <option *ngFor="let main of mainCategories" value="{{main.id}}">
-                    {{main.name}}
+            <label>Categorias</label>
+            <select multiple="multiple" class="form-select" [(ngModel)]="key.categories" name="key.categories" id="key.categories" #name="ngModel">
+                <option *ngFor="let category of categories" value="{{category.id}}">
+                    {{category.name}}
                 </option>
             </select>
         </div>

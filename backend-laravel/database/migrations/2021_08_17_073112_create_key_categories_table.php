@@ -14,8 +14,13 @@ class CreateKeyCategoriesTable extends Migration
     public function up()
     {
         Schema::create('key_categories', function (Blueprint $table) {
-            $table->id(['key_id','category_id']);
+            $table->unsignedBigInteger('key_id');
+            $table->unsignedBigInteger('category_id');
             $table->timestamps();
+
+            $table->primary(['key_id', 'category_id']);
+            $table->foreign('key_id')->references('id')->on('keys');
+            $table->foreign('category_id')->references('id')->on('categories');
         });
     }
 

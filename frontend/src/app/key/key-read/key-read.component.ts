@@ -27,11 +27,11 @@ export class KeyReadComponent implements OnInit {
   public search: string = ''
 
   constructor(
-    private KeyService: KeyService,
+    private keyService: KeyService,
     protected alertService: AlertService,
   ) {
 
-    this.KeyService.getAll(this.pagination.current_page | 1, this.pagination.per_page | 4, this.mainCategory, this.search, '') //window.location.href
+    this.keyService.getAll(this.pagination.current_page | 1, this.pagination.per_page | 4, this.mainCategory, this.search, '') //window.location.href
       .subscribe(data => {
         this.keys = data!.data
         this.pagination = {
@@ -50,7 +50,7 @@ export class KeyReadComponent implements OnInit {
 
   getKey(): void {
     let count: number = 0;
-    this.KeyService.getAll(this.pagination.current_page, this.pagination.per_page, this.mainCategory, this.search, '') //window.location.href
+    this.keyService.getAll(this.pagination.current_page, this.pagination.per_page, this.mainCategory, this.search, '') //window.location.href
       .subscribe(data => {
 
         this.keys = data!.data
@@ -64,13 +64,13 @@ export class KeyReadComponent implements OnInit {
   }
 
   getMains(): void {
-    this.KeyService.getMains()
+    this.keyService.getMains()
       .subscribe(data => this.mainCategories = data!)
   }
 
   delete(key: Category) {
     if (confirm("Confirma a deleção do registro? " + key.name)) {
-      this.KeyService.deleteKey(key.id!).subscribe(() => {
+      this.keyService.deleteKey(key.id!).subscribe(() => {
         let index = this.keys.findIndex(c => this.locator(c, key.id!));
         if (index > -1) {
           this.keys.splice(index, 1);

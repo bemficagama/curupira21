@@ -14,12 +14,13 @@ class CreateUrlCategoriesTable extends Migration
     public function up()
     {
         Schema::create('url_categories', function (Blueprint $table) {
-            $table->id(['url_id','category_id']);
+            $table->unsignedBigInteger('url_id');
+            $table->unsignedBigInteger('category_id');
             $table->timestamps();
-        });
 
-        Schema::table('users', function (Blueprint $table) {
-            $table->integer('votes');
+            $table->primary(['url_id', 'category_id']);
+            $table->foreign('url_id')->references('id')->on('urls');
+            $table->foreign('category_id')->references('id')->on('categories');
         });
     }
 
