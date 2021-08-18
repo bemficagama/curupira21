@@ -5,12 +5,13 @@ namespace App\Http\Controllers;
 use App\Models\Key;
 use App\Models\Category;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class KeyController extends Controller
 {
-    public function __construct(Key $category)
+    public function __construct(Key $key)
     {
-        $this->category = $category;
+        $this->key = $key;
     }
 
     /**
@@ -49,11 +50,23 @@ class KeyController extends Controller
      */
     public function store(Request $request)
     {
+        $categories = array();
+        $categories = $request->categories;
+
         $request->validate($this->key->rules());
 
         $key = $this->key->create([
-            'key' => $request->name,
+            'key' => $request->key,
         ]);
+
+        if (!empty($categories)) {
+            $rows = array();
+            foreach ($categories as $category) {
+                $rows[] = [ 'key_id' =>  $key->id, 'category_id' => $category ];
+            }
+
+            DB::table('key_has_categories')->insert($rows);
+        }
 
         return response()->json($key, 201);
     }
