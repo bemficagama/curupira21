@@ -1,16 +1,18 @@
 <?php
 
 namespace App\Models;
+use Illuminate\Support\Facades\DB;
 
 use Illuminate\Database\Eloquent\Model;
 
 class Key extends Model
 {
+    protected $categories = [];
 
     protected $table = 'keys';
     protected $primaryKey = 'id';
 
-    protected $fillable = ['id', 'key'];
+    public $fillable = ['id', 'key'];
 
     public function rules()
     {
@@ -19,8 +21,14 @@ class Key extends Model
         ];
     }
 
-    function categories()
+    function getCategoriesId()
     {
-        return $this->hasMany(Castegory::class);
+        $categories = DB::table('key_has_categories')->select('category_id')->where('key_id', '=', $this->id)->get();
+        $categoriesId = [];
+        foreach ($categories as $key => $category) {
+            $categoriesId[] = "{$category->category_id}";
+        }
+
+        return $categoriesId;
     }
 }

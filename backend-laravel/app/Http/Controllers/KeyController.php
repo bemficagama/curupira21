@@ -80,6 +80,8 @@ class KeyController extends Controller
     public function show($id)
     {
         $key = $this->key->find($id);
+        $key->getCategoriesId();
+        $key->categories = $key->getCategoriesId();
         if ($key === null) {
             return response()->json(['erro' => 'Recurso pesquisado não existe'], 404);
         }
