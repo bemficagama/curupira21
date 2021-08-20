@@ -51,22 +51,16 @@ class KeyController extends Controller
     public function store(Request $request)
     {
         $categories = array();
-        $categories = $request->categories;
+        if (is_array($request->categories)){
+            $categories = $request->categories;
+        }
 
         $request->validate($this->key->rules());
 
-        $key = $this->key->create([
-            'key' => $request->key,
-        ]);
-
-        if (!empty($categories)) {
-            $rows = array();
-            foreach ($categories as $category) {
-                $rows[] = [ 'key_id' =>  $key->id, 'category_id' => $category ];
-            }
-
-            DB::table('key_has_categories')->insert($rows);
-        }
+        $key = new Key();
+        $key->key = $request->key;
+        $key->categories = $categories;
+        $key->save();
 
         return response()->json($key, 201);
     }
@@ -81,7 +75,6 @@ class KeyController extends Controller
     {
         $key = $this->key->find($id);
         $key->getCategoriesId();
-        $key->categories = $key->getCategoriesId();
         if ($key === null) {
             return response()->json(['erro' => 'Recurso pesquisado não existe'], 404);
         }
@@ -98,7 +91,13 @@ class KeyController extends Controller
      */
     public function update(Request $request, $id)
     {
+        $categories = array();
+        if (is_array($request->categories)){
+            $categories = $request->categories;
+        }
+
         $key = $this->key->find($id);
+        $key->categories = $categories;
 
         if ($key === null) {
             return response()->json(['erro' => 'Impossível realizar a atualização. O recurso solicitado não existe'], 404);
