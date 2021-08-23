@@ -24,4 +24,18 @@ class Category extends Model
     {
         return $this->belongsTo('App\Category');
     }
+
+    public function keys()
+    {
+        return $this->belongsToMany(
+            Key::class, 'key_category'
+        );
+    }
+
+    public function urls()
+    {
+        return $this->belongsToMany(
+            Url::class, 'url_category'
+        );
+    }
 }

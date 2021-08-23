@@ -25,12 +25,12 @@ export class UrlUpdateComponent implements OnInit {
     private activeRoute: ActivatedRoute,
     protected alertService: AlertService) {
     activeRoute.params.subscribe(params => {
-      let id = params["id"];
+      const id = params["id"];
       if (id != null) {
-        this.urlService.getCategories().subscribe(data => {
-          this.categories = data!
+        this.urlService.getCategories().subscribe(categories => {
           this.urlService.readById(id).subscribe(url => {
             this.url = url!
+            this.categories = categories!
           });
         })
 
@@ -38,7 +38,8 @@ export class UrlUpdateComponent implements OnInit {
     })
   }
 
-  ngOnInit(): void { }
+  ngOnInit(): void {
+  }
 
   save(): void {
     this.urlService.update(this.url).subscribe(() => {

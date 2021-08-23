@@ -5,9 +5,11 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class KeyHasCategories extends Model
+class UrlCategory extends Model
 {
     use HasFactory;
 
-    public $fillable = ['key_id', 'category_id'];
+    protected $table = 'url_category';
+
+    public $fillable = ['url_id', 'category_id'];
 }

@@ -1,25 +1,25 @@
 <div class="container app-url-update">
-    <div class="bg-primary p-2 text-white bg-warning text-dark">
-        <h5>Alterar Url</h5>
-    </div>
-    <form (ngSubmit)="save()" #urlForm="ngForm">
-        <div class="form-group">
-            <label>Url</label>
-            <input class="form-control" name="url" id="url" [(ngModel)]="url.url" #name="ngModel" />
-        </div>
-        <div class="form-group">
-            <label>Categorias</label>
-            <select multiple="multiple" class="form-select" [(ngModel)]="url.categories" name="url.categories" id="url.categories" #name="ngModel">
-                <option *ngFor="let category of categories" value="{{category.id}}">
-                    {{category.name}}
-                </option>
-            </select>
-        </div>
-        <button type="submit" class="btn btn-primary m-1 btn-warning">
-            Salvar
-        </button>
-        <button type="reset" class="btn btn-secondary" routerLink="/url">
-            Cancelar
-        </button>
-    </form>
+  <div class="bg-primary p-2 text-white bg-warning text-dark">
+      <h5>Alterar Url</h5>
+  </div>
+  <form (ngSubmit)="save()" #urlForm="ngForm">
+      <div class="form-group">
+          <label>Url</label>
+          <input class="form-control" name="url" id="url" [(ngModel)]="url.url" #name="ngModel" />
+      </div>
+      <div class="form-group">
+          <label>Categorias</label>
+          <select multiple="multiple" class="form-select" [(ngModel)]="url.categoryIds" name="url.categoryIds" id="url.categoryIds" #name="ngModel">
+              <option *ngFor="let category of categories" value="{{category.id}}">
+                  {{category.name}}
+              </option>
+          </select>
+      </div>
+      <button type="submit" class="btn btn-primary m-1 btn-warning">
+          Salvar
+      </button>
+      <button type="reset" class="btn btn-secondary" routerLink="/url">
+          Cancelar
+      </button>
+  </form>
 </div>

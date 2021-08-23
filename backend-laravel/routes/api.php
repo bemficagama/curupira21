@@ -22,6 +22,8 @@ Route::prefix('v1')->middleware('jwt.auth')->group(function () {
     Route::get('category-mains', 'App\Http\Controllers\CategoryController@mains');
     Route::get('key/categories', 'App\Http\Controllers\KeyController@categories');
     Route::apiResource('key', 'App\Http\Controllers\KeyController');
+    Route::get('url/categories', 'App\Http\Controllers\UrlController@categories');
+    Route::apiResource('url', 'App\Http\Controllers\UrlController');
     //Route::apiResource('carro', 'App\Http\Controllers\CarroController');
     //Route::apiResource('locacao', 'App\Http\Controllers\LocacaoController');
     //Route::apiResource('marca', 'App\Http\Controllers\MarcaController');

@@ -10,8 +10,9 @@ class Key extends Model
 {
     protected $table = 'keys';
     protected $primaryKey = 'id';
+    protected $hidden = ['categories'];
 
-    public $fillable = ['id', 'key', 'categories1'];
+    public $fillable = ['id', 'key', 'categories'];
 
     public function rules()
     {
@@ -20,57 +21,62 @@ class Key extends Model
         ];
     }
 
-    function getCategoriesId()
-    {
-        $categories = DB::table('key_has_categories')->select('category_id')->where('key_id', '=', $this->id)->get();
-        $categoriesId = [];
-        foreach ($categories as $key => $category) {
-            $categoriesId[] = "{$category->category_id}";
-        }
-
-        $this->attributes['categories'] = $categoriesId;
-    }
-
     public function save(array $options = [])
     {
-        $categories = $this->categories;
-        error_log(implode("|",$categories));
-        unset($this->attributes['categories']);
+        $categoryIds = $options['categoryIds'];
+
         // before save code
         parent::save($options);
         // after save code
-        $this->getCategoriesId();
-        $insert = array_diff($categories, $this->categories);
 
-        if (!empty($insert)) {
-            foreach ($insert as $id) {
-                $keyHasCategories = new KeyHasCategories();
-                $keyHasCategories->key_id = $this->id;
-                $keyHasCategories->category_id = "{$id}";
-                $keyHasCategories->save();
-            }
-        }
+        $this->categories()->sync($categoryIds);
 
-        $delete = array_diff($this->categories, $categories);
-
-        if (!empty($delete)) {
-            foreach ($delete as $id) {
-                $keyHasCategories = KeyHasCategories::where(['category_id' => $id, 'key_id' => $this->id]);
-                $keyHasCategories->delete();
-            }
-        }
     }
 
     public function delete(array $options = [])
     {
-        $this->getCategoriesId();
-        $categories = $this->categories;
-        foreach ($categories as $key => $id) {
-            $keyHasCategories = KeyHasCategories::where(['category_id' => $id, 'key_id' => $this->id]);
-            $keyHasCategories->delete();
-        }
+        $this->categories()->detach();
         // before delete code
         parent::delete($options);
         // after delete code
+    }
+
+    public function categories()
+    {
+        return $this->belongsToMany(Category::class, 'key_category');
+    }
+
+    public function categoryIds()
+    {
+        $this->categories;
+
+        $ids = array();
+        foreach ($this->categories as $key => $category) {
+            $ids[] = "{$category->id}";
+        }
+        $this->attributes['categoryIds'] = $ids;
+    }
+
+    /**
+     * Search Key
+     *
+     * @param string $arg
+     * @param int $perPage
+     * @param int $main_category
+     *
+     * @return keys[]
+     */
+    static public function search($arg, $perPage = 4, $main_category = 0)
+    {
+        if ($main_category == 0) {
+            return Key::where('key', 'like', '%' . $arg . '%')
+                ->paginate($perPage);
+        }
+
+        $category = Category::find($main_category);
+        return $category->belongsToMany(
+            Key::class,
+            'key_category'
+        )->where('key', 'like', '%' . $arg . '%')->paginate($perPage);
     }
 }

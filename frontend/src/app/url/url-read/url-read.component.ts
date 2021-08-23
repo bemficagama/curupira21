@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-
+import { Category } from '../../category/shared/category';
 import { Url } from '../shared/url';
 import { UrlService } from '../shared/url.service';
 import { AlertService } from 'src/app/_alert';
-import { Category } from 'src/app/category/shared/category';
+import { Pagination } from 'src/app/shared/Pagination';
 
 @Component({
   selector: 'app-url-read',
@@ -21,114 +21,72 @@ export class UrlReadComponent implements OnInit {
   private locator = (c: Url, id: number) => c.id == id;
 
   urls: Url[] = new Array<Url>()
-  categories: Category[] = new Array<Category>()
-  quantityPages: number = 0
-  groupIndex: number = 0
-  groups: number[][] = []
-  
-
-  public quantityPerPage = 4;
-  public selectedPage = 1;
-  public firstPage = 1;
-  public lastPage = 1;
-  public category = 0
+  mainCategories: Category[] = new Array<Category>()
+  pagination: Pagination = new Pagination()
+  public mainCategory = 0
   public search: string = ''
 
   constructor(
     private urlService: UrlService,
-    protected alertService: AlertService
-  ) {}
+    protected alertService: AlertService,
+  ) {
+
+    this.urlService.getAll(this.pagination.current_page | 1, this.pagination.per_page | 4, this.mainCategory, this.search, '') //window.location.href
+      .subscribe(data => {
+        console.log(this.search)
+        this.urls = data!.data
+        this.pagination = {
+          total: data.total, per_page: data.per_page, current_page: data.current_page,
+          last_page: data.last_page, first_page_url: data.first_page_url, last_page_url: data.last_page_url,
+          next_page_url: data.next_page_url, prev_page_url: data.prev_page_url, path: data.path, from: data.from,
+          to: data.to, links: data.links
+        }
+      })
+
+    this.getMains()
+  }
 
   ngOnInit() {
-    this.getUrl()
-    this.getCategories()
   }
 
   getUrl(): void {
     let count: number = 0;
-    this.urlService.getUrls(this.selectedPage, this.quantityPerPage, this.category, this.search)
+    this.urlService.getAll(this.pagination.current_page, this.pagination.per_page, this.mainCategory, this.search, '') //window.location.href
       .subscribe(data => {
+
         this.urls = data!.data
-        count = data!.count
-        this.quantityPages = Math.ceil(count / this.quantityPerPage)
-        this.groups = this.separar(this.pages, 5)
+        this.pagination = {
+          total: data.total, per_page: data.per_page, current_page: data.current_page,
+          last_page: data.last_page, first_page_url: data.first_page_url, last_page_url: data.last_page_url,
+          next_page_url: data.next_page_url, prev_page_url: data.prev_page_url, path: data.path, from: data.from,
+          to: data.to, links: data.links
+        }
       })
   }
 
-  getCategories(): void {
-    this.urlService.getCategories()
-      .subscribe(data => this.categories = data!)
+  getMains(): void {
+    this.urlService.getMains()
+      .subscribe(data => this.mainCategories = data!)
   }
 
-  delete(url: Url) {
-    this.urlService.deleteUrl(url.id!).subscribe(() => {
-      let index = this.urls.findIndex(c => this.locator(c, url.id!));
-      if (index > -1) {
-        this.urls.splice(index, 1);
-      }
-      this.alertService.success('Sucesso: Categoria Excluída!', this.options)
-    });
-  }
-
-  private separar(itens: any[], maximo: number): number[][] {
-    return itens.reduce((acumulador: any[], item: number, indice: number) => {
-      const grupo = Math.floor(indice / maximo);
-      acumulador[grupo] = [...(acumulador[grupo] || []), item];
-      return acumulador;
-    }, []);
-  };
-
-  get pages() {
-    let aPages = new Array()
-    for (let i = 0; i < this.quantityPages; i++) {
-      aPages[i] = i + 1
+  delete(url: Category) {
+    if (confirm("Confirma a deleção do registro? " + url.name)) {
+      this.urlService.deleteUrl(url.id!).subscribe(() => {
+        let index = this.urls.findIndex(c => this.locator(c, url.id!));
+        if (index > -1) {
+          this.urls.splice(index, 1);
+        }
+        this.alertService.success('Sucesso: Categoria Excluída!', this.options)
+      })
     }
-    return aPages
-  }
-
-  get group(): number[] {
-    //this.groups = this.separar(this.pages, 5)
-    return this.groups[this.groupIndex]
-  }
-
-  groupPrior() {
-    if (this.groupIndex > 0) {
-      this.groupIndex--
-      this.changePage(this.groups[this.groupIndex][0])
-    }
-  }
-
-  groupNext() {
-    if (this.groupIndex < this.groups.length - 1) {
-      this.groupIndex++
-      this.changePage(this.groups[this.groupIndex][0])
-    }
-
-  }
-
-  changePage(newPage: number) {
-    this.selectedPage = newPage
-    this.getUrl()
-  }
-
-  onChangeSize() {
-    this.groupIndex = 0
-    this.changePage(1);
-  }
-
-  onCategoryChange() {
-    this.groupIndex = 0
-    this.changePage(1);
   }
 
   onEnter() {
-    this.changePage(1)
     this.getUrl()
   }
 
   onEscape() {
     this.search = ''
-    this.changePage(1)
     this.getUrl()
   }
 }

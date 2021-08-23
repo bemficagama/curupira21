@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateKeyHasCategoriesTable extends Migration
+class CreateUrlCategoryTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,13 +13,13 @@ class CreateKeyHasCategoriesTable extends Migration
      */
     public function up()
     {
-        Schema::create('key_has_categories', function (Blueprint $table) {
-            $table->unsignedBigInteger('key_id');
+        Schema::create('url_category', function (Blueprint $table) {
+            $table->unsignedBigInteger('url_id');
             $table->unsignedBigInteger('category_id');
             $table->timestamps();
 
-            $table->primary(['key_id', 'category_id']);
-            $table->foreign('key_id')->references('id')->on('keys');
+            $table->primary(['url_id', 'category_id']);
+            $table->foreign('url_id')->references('id')->on('urls');
             $table->foreign('category_id')->references('id')->on('categories');
         });
     }
@@ -31,6 +31,6 @@ class CreateKeyHasCategoriesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('key_has_categories');
+        Schema::dropIfExists('url_category');
     }
 }

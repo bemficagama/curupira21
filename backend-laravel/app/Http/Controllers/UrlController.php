@@ -2,15 +2,15 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Key;
+use App\Models\Url;
 use App\Models\Category;
 use Illuminate\Http\Request;
 
-class KeyController extends Controller
+class UrlController extends Controller
 {
-    public function __construct(Key $key)
+    public function __construct(Url $url)
     {
-        $this->key = $key;
+        $this->url = $url;
     }
 
     /**
@@ -20,10 +20,10 @@ class KeyController extends Controller
      */
     public function index(Request $request)
     {
-        $keys = array();
-        $keys = Key::search($request->search, $request->perPage, $request->main_category);
+        $urls = array();
+        $urls = Url::search($request->search, $request->perPage, $request->main_category);
 
-        return response()->json($keys, 200);
+        return response()->json($urls, 200);
     }
 
     public function mains(Request $request)
@@ -51,39 +51,39 @@ class KeyController extends Controller
             $categoryIds = $request->categoryIds;
         }
 
-        $request->validate($this->key->rules());
+        $request->validate($this->url->rules());
 
-        $key = new Key();
-        $key->key = $request->key;
-        $key->save(['categoryIds' => $categoryIds]);
+        $url = new Url();
+        $url->url = $request->url;
+        $url->save(['categoryIds' => $categoryIds]);
 
-        return response()->json($key, 201);
+        return response()->json($url, 201);
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\Key  $key
+     * @param  \App\Models\Url  $url
      * @return \Illuminate\Http\Response
      */
     public function show($id)
     {
-        $key_ = $this->key->find($id);
+        $url_ = $this->url->find($id);
 
-        if ($key_ === null) {
+        if ($url_ === null) {
             return response()->json(['erro' => 'Recurso pesquisado não existe'], 404);
         }
 
-        $key_->categoryIds();
+        $url_->categoryIds();
 
-        return response()->json($key_, 200);
+        return response()->json($url_, 200);
     }
 
     /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Key  $key
+     * @param  \App\Models\Url  $url
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
@@ -93,9 +93,9 @@ class KeyController extends Controller
             $categoryIds = $request->categoryIds;
         }
 
-        $key = $this->key->find($id);
+        $url = $this->url->find($id);
 
-        if ($key === null) {
+        if ($url === null) {
             return response()->json(['erro' => 'Impossível realizar a atualização. O recurso solicitado não existe'], 404);
         }
 
@@ -104,7 +104,7 @@ class KeyController extends Controller
             $regrasDinamicas = array();
 
             //percorrendo todas as regras definidas no Model
-            foreach ($key->rules() as $input => $regra) {
+            foreach ($url->rules() as $input => $regra) {
 
                 //coletar apenas as regras aplicáveis aos parâmetros parciais da requisição PATCH
                 if (array_key_exists($input, $request->all())) {
@@ -114,30 +114,30 @@ class KeyController extends Controller
 
             $request->validate($regrasDinamicas);
         } else {
-            $request->validate($key->rules());
+            $request->validate($url->rules());
         }
 
-        $key->fill($request->all());
-        $key->save(['categoryIds' => $categoryIds]);
+        $url->fill($request->all());
+        $url->save(['categoryIds' => $categoryIds]);
 
-        return response()->json($key, 200);
+        return response()->json($url, 200);
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Key  $key
+     * @param  \App\Models\Url  $url
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)
     {
-        $key = $this->key->find($id);
+        $url = $this->url->find($id);
 
-        if ($key === null) {
+        if ($url === null) {
             return response()->json(['erro' => 'Impossível realizar a exclusão. O recurso solicitado não existe'], 404);
         }
 
-        $key->delete();
+        $url->delete();
         return response()->json(['msg' => 'O registro foi removido com sucesso!'], 200);
     }
 }

@@ -18,7 +18,6 @@ export class UrlCreateComponent implements OnInit {
 
   url: Url = {}
   categories: Category[] = new Array<Category>()
-
   constructor(
     private urlService: UrlService,
     private router: Router,
@@ -37,7 +36,7 @@ export class UrlCreateComponent implements OnInit {
   save(): void {
     this.urlService.save(this.url).subscribe(() => {
       this.router.navigate(["/url"]);
-      this.alertService.success('Sucesso: Url Criada!', this.options)
+      this.alertService.success('Sucesso: Chave Criada!', this.options)
     });
   }
 

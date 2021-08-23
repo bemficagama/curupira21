@@ -7,9 +7,11 @@ import { UrlReadComponent } from '../url-read/url-read.component';
 import { UrlCreateComponent } from '../url-create/url-create.component';
 import { UrlUpdateComponent } from '../url-update/url-update.component';
 import { UrlService } from './url.service';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 @NgModule({
-    imports: [CommonModule, FormsModule, RouterModule],
+    imports: [CommonModule, FormsModule, RouterModule, NgbModule],
+    //imports: [ FormsModule, RouterModule, NgbModule],
     providers:    [ UrlService ],
     declarations: [UrlReadComponent, UrlCreateComponent, UrlUpdateComponent],
     exports: []

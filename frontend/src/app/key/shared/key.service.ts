@@ -18,8 +18,8 @@ export class KeyService {
     private router: Router
   ) { }
 
-  getAll(page: number = 1, per_page: number = 4, parent_id: number = 0, search: string = '', path: string): Observable<KeyRequest> {
-    return this.http.get<KeyRequest>(`${environment.api}/v1/key?page=${page}&perPage=${per_page}&parent_id=${parent_id}&search=${search}&path=${path}`)
+  getAll(page: number = 1, per_page: number = 4, main_category: number = 0, search: string = '', path: string): Observable<KeyRequest> {
+    return this.http.get<KeyRequest>(`${environment.api}/v1/key?page=${page}&perPage=${per_page}&main_category=${main_category}&search=${search}&path=${path}`)
       .pipe(catchError((error: HttpErrorResponse) => {
         if (error.status === 401) {
           this.accountService.clear();
@@ -52,7 +52,9 @@ export class KeyService {
     return this.http.get<Category[]>(`${environment.api}/v1/category-mains`)
       .pipe(catchError((error: HttpErrorResponse) => {
         if (error.status === 401) {
-          this.accountService.clear;
+          this.accountService.clear();
+          this.router.navigateByUrl("/login");
+          return throwError(`TOKEN: Token Inválido`);
         }
         let msg: string
         if (error.error instanceof ErrorEvent) {
@@ -80,7 +82,9 @@ export class KeyService {
     return this.http.get<Category[]>(`${environment.api}/v1/key/categories`)
       .pipe(catchError((error: HttpErrorResponse) => {
         if (error.status === 401) {
-          this.accountService.clear;
+          this.accountService.clear();
+          this.router.navigateByUrl("/login");
+          return throwError(`TOKEN: Token Inválido`);
         }
         let msg: string
         if (error.error instanceof ErrorEvent) {
@@ -106,63 +110,122 @@ export class KeyService {
 
   readById(id: number) {
     return this.http.get<Key>(`${environment.api}/v1/key/${id}`)
-    //.pipe(catchError(this.handleError('key.getById', null)))
+      .pipe(catchError((error: HttpErrorResponse) => {
+        if (error.status === 401) {
+          this.accountService.clear();
+          this.router.navigateByUrl("/login");
+          return throwError(`TOKEN: Token Inválido`);
+        }
+        let msg: string
+        if (error.error instanceof ErrorEvent) {
+          // Erro de client-side ou de rede
+          msg = error.error.message
+          console.error('Ocorreu um erro:', error.error.message);
+        } if (error.status == 0) {
+          msg = "Sem comunicação com o servidor"
+          console.error(
+            `Código do erro ${error.status}, ` +
+            `Erro: ${msg}`);
+        } else {
+          // Erro retornando pelo backend
+          msg = JSON.stringify(error.error.status)
+          console.error(
+            `Código do erro ${error.status}, ` +
+            `Erro: ${JSON.stringify(error.error)}`);
+        }
+        // retornar um observable com uma mensagem amigavel.
+        return throwError(`SHOW: ${msg}`);
+      }));
 
   }
 
   update(key: Key): Observable<Key> {
     return this.http.put<Key>(`${environment.api}/v1/key/${key.id}`, key)
       .pipe(catchError((error: HttpErrorResponse) => {
-
+        if (error.status === 401) {
+          this.accountService.clear();
+          this.router.navigateByUrl("/login");
+          return throwError(`TOKEN: Token Inválido`);
+        }
+        let msg: string
         if (error.error instanceof ErrorEvent) {
           // Erro de client-side ou de rede
+          msg = error.error.message
           console.error('Ocorreu um erro:', error.error.message);
+        } if (error.status == 0) {
+          msg = "Sem comunicação com o servidor"
+          console.error(
+            `Código do erro ${error.status}, ` +
+            `Erro: ${msg}`);
         } else {
           // Erro retornando pelo backend
+          msg = JSON.stringify(error.error.status)
           console.error(
             `Código do erro ${error.status}, ` +
             `Erro: ${JSON.stringify(error.error)}`);
         }
         // retornar um observable com uma mensagem amigavel.
-        return throwError(`ATUALIZAR: ${JSON.stringify(error.error)}`);
+        return throwError(`UPDATE: ${msg}`);
       }));
   }
 
   save(key: Key): Observable<Key> {
     return this.http.post<Key>(`${environment.api}/v1/key`, key)
       .pipe(catchError((error: HttpErrorResponse) => {
-
+        if (error.status === 401) {
+          this.accountService.clear();
+          this.router.navigateByUrl("/login");
+          return throwError(`TOKEN: Token Inválido`);
+        }
+        let msg: string
         if (error.error instanceof ErrorEvent) {
           // Erro de client-side ou de rede
+          msg = error.error.message
           console.error('Ocorreu um erro:', error.error.message);
+        } if (error.status == 0) {
+          msg = "Sem comunicação com o servidor"
+          console.error(
+            `Código do erro ${error.status}, ` +
+            `Erro: ${msg}`);
         } else {
           // Erro retornando pelo backend
+          msg = JSON.stringify(error.error.status)
           console.error(
             `Código do erro ${error.status}, ` +
             `Erro: ${JSON.stringify(error.error)}`);
         }
         // retornar um observable com uma mensagem amigavel.
-        return throwError(`SALVAR: ${JSON.stringify(error.error)}`);
+        return throwError(`STORE: ${msg}`);
       }));
   }
 
   deleteKey(id: number): Observable<unknown> {
     return this.http.delete(`${environment.api}/v1/key/${id}`)
       .pipe(catchError((error: HttpErrorResponse) => {
-
+        if (error.status === 401) {
+          this.accountService.clear();
+          this.router.navigateByUrl("/login");
+          return throwError(`TOKEN: Token Inválido`);
+        }
+        let msg: string
         if (error.error instanceof ErrorEvent) {
           // Erro de client-side ou de rede
+          msg = error.error.message
           console.error('Ocorreu um erro:', error.error.message);
+        } if (error.status == 0) {
+          msg = "Sem comunicação com o servidor"
+          console.error(
+            `Código do erro ${error.status}, ` +
+            `Erro: ${msg}`);
         } else {
           // Erro retornando pelo backend
+          msg = JSON.stringify(error.error.status)
           console.error(
             `Código do erro ${error.status}, ` +
             `Erro: ${JSON.stringify(error.error)}`);
         }
         // retornar um observable com uma mensagem amigavel.
-        return throwError(`DELETE: ${JSON.stringify(error.error)}`);
-        `Network Error: ${error.statusText} (${error.status})`
-        throwError(`DELETE: ${error.statusText} ${JSON.stringify(error.error)} (Código do Erro: ${error.status})`)
+        return throwError(`DELETE: ${msg}`);
       }));
   }
 }
