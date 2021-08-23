@@ -141,62 +141,48 @@ export class UrlService {
 
   update(url: Url): Observable<Url> {
     return this.http.put<Url>(`${environment.api}/v1/url/${url.id}`, url)
-      .pipe(catchError((error: HttpErrorResponse) => {
-        if (error.status === 401) {
-          this.accountService.clear();
-          this.router.navigateByUrl("/login");
-          return throwError(`TOKEN: Token Inválido`);
-        }
-        let msg: string
-        if (error.error instanceof ErrorEvent) {
-          // Erro de client-side ou de rede
-          msg = error.error.message
-          console.error('Ocorreu um erro:', error.error.message);
-        } if (error.status == 0) {
-          msg = "Sem comunicação com o servidor"
-          console.error(
-            `Código do erro ${error.status}, ` +
-            `Erro: ${msg}`);
-        } else {
-          // Erro retornando pelo backend
-          msg = JSON.stringify(error.error.status)
-          console.error(
-            `Código do erro ${error.status}, ` +
-            `Erro: ${JSON.stringify(error.error)}`);
-        }
-        // retornar um observable com uma mensagem amigavel.
-        return throwError(`UPDATE: ${msg}`);
-      }));
+    .pipe(catchError((error: HttpErrorResponse) => {
+      if (error.status === 401) {
+        this.accountService.clear();
+        this.router.navigateByUrl("/login");
+        return throwError(`TOKEN: Token Inválido`);
+      }
+      if (error.error instanceof ErrorEvent) {
+        // Erro de client-side ou de rede
+        console.error('Ocorreu um erro:', error.error.message);
+      } else {
+        // Erro retornando pelo backend
+        console.error(
+          `Código do erro ${error.status}, ` +
+          `Erro: ${JSON.stringify(error.error)}`);
+          console.log(error.error.errors)
+      }
+      // retornar um observable com uma mensagem amigavel.
+      return throwError(`SALVAR: ${JSON.stringify(error.error.errors)}`);
+    }));
   }
 
   save(url: Url): Observable<Url> {
     return this.http.post<Url>(`${environment.api}/v1/url`, url)
-      .pipe(catchError((error: HttpErrorResponse) => {
-        if (error.status === 401) {
-          this.accountService.clear();
-          this.router.navigateByUrl("/login");
-          return throwError(`TOKEN: Token Inválido`);
-        }
-        let msg: string
-        if (error.error instanceof ErrorEvent) {
-          // Erro de client-side ou de rede
-          msg = error.error.message
-          console.error('Ocorreu um erro:', error.error.message);
-        } if (error.status == 0) {
-          msg = "Sem comunicação com o servidor"
-          console.error(
-            `Código do erro ${error.status}, ` +
-            `Erro: ${msg}`);
-        } else {
-          // Erro retornando pelo backend
-          msg = JSON.stringify(error.error.status)
-          console.error(
-            `Código do erro ${error.status}, ` +
-            `Erro: ${JSON.stringify(error.error)}`);
-        }
-        // retornar um observable com uma mensagem amigavel.
-        return throwError(`STORE: ${msg}`);
-      }));
+    .pipe(catchError((error: HttpErrorResponse) => {
+      if (error.status === 401) {
+        this.accountService.clear();
+        this.router.navigateByUrl("/login");
+        return throwError(`TOKEN: Token Inválido`);
+      }
+      if (error.error instanceof ErrorEvent) {
+        // Erro de client-side ou de rede
+        console.error('Ocorreu um erro:', error.error.message);
+      } else {
+        // Erro retornando pelo backend
+        console.error(
+          `Código do erro ${error.status}, ` +
+          `Erro: ${JSON.stringify(error.error)}`);
+          console.log(error.error.errors)
+      }
+      // retornar um observable com uma mensagem amigavel.
+      return throwError(`SALVAR: ${JSON.stringify(error.error.errors)}`);
+    }));
   }
 
   deleteUrl(id: number): Observable<unknown> {
